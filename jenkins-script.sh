@@ -35,6 +35,7 @@ fi
 S3_BUCKET="storage.staging.lkft.org"
 PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
 ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/arm64/defconfig%2Blkft/gcc-8"
+KERNEL_URL=${ARCH_ARTIFACTS}/Image
 
 # Generate and submit tests
 # $1: Location of variables.ini file
@@ -68,7 +69,6 @@ create_vars_for_machine() {
   echo "====================================================="
   echo "Now submitting jobs for ${MACHINE^^}"
   unset DEVICE_TYPE
-  unset KERNEL_URL
   unset DTB_FILENAME
   unset EXT4GZ_FILENAME
   unset TARXZ_FILENAME
@@ -87,7 +87,6 @@ create_vars_for_machine() {
       EXT4GZ_FILENAME=rpb-console-image-lkft-dragonboard-410c-20190923201628.rootfs.ext4.gz
       DTB_FILENAME=dtbs/qcom/apq8016-sbc.dtb
       ROOTFS_PUB_DEST="rootfs/oe-lkft-sumo/dragonboard-410c/62"
-      KERNEL_URL=${ARCH_ARTIFACTS}/Image
       BOOT_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
       ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${EXT4GZ_FILENAME}
       ;;
@@ -105,12 +104,10 @@ create_vars_for_machine() {
       BOOT_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
       #KERNEL_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${KERNEL_IMG_FILENAME}
       ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_IMG_FILENAME}
-      KERNEL_URL=${ARCH_ARTIFACTS}/Image
       ;;
     juno)
       # Arm's Juno
       DEVICE_TYPE=juno-r2
-      KERNEL_URL=${ARCH_ARTIFACTS}/Image
       DTB_FILENAME=dtbs/arm/juno-r2.dtb
       TARXZ_FILENAME=rpb-console-image-lkft-juno-20190911025238.rootfs.tar.xz
       ROOTFS_PUB_DEST="rootfs/oe-lkft-sumo/juno/60"
@@ -120,7 +117,6 @@ create_vars_for_machine() {
     ls2088a)
       # NXP's LS2088A RDB
       DEVICE_TYPE=nxp-ls2088
-      KERNEL_URL=${ARCH_ARTIFACTS}/Image
       DTB_FILENAME=dtbs/freescale/fsl-ls2088a-rdb.dtb
       TARXZ_FILENAME=rpb-console-image-lkft-ls2088ardb-20191019001216.rootfs.tar.xz
       ROOTFS_URL=http://people.linaro.org/~daniel.diaz/lkft-nxp/images/${TARXZ_FILENAME}
