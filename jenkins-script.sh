@@ -155,6 +155,10 @@ PROJECT_NAME=linux-mainline-oe
 KSELFTEST_PATH=/opt/kselftests/mainline/
 LAVA_JOB_PRIORITY=72
 TDEFINITIONS_REVISION=master
+LXC_PTABLE_FILE=ptable-linux-8g.img
+LXC_BOOT_FILE=boot.img
+LXC_ROOTFS_FILE=rpb-console-image-lkft.rootfs.img
+PROJECT=lkft-
 EOF
   echo
   echo "---vvv------variables.ini------vvv---"
