@@ -36,6 +36,7 @@ S3_BUCKET="storage.staging.lkft.org"
 PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
 ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/arm64/defconfig%2Blkft/gcc-8"
 KERNEL_URL=${ARCH_ARTIFACTS}/Image
+MODULES_URL=${ARCH_ARTIFACTS}/modules.tar.xz
 
 # Generate and submit tests
 # $1: Location of variables.ini file
@@ -133,6 +134,7 @@ PUB_DEST=${PUB_DEST}
 BUILD_NUMBER=${BUILD_NUMBER}
 BUILD_URL=http://ci.staging.lkft.org/job/kernel-arch-complete/${BUILD_NUMBER}/
 KERNEL_URL=${KERNEL_URL}
+MODULES_URL=${MODULES_URL}
 DTB_URL=${ARCH_ARTIFACTS}/${DTB_FILENAME}
 KERNEL_CONFIG_URL=${ARCH_ARTIFACTS}/kernel.config
 #
