@@ -37,10 +37,10 @@ PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
 ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/arm64/defconfig%2Blkft/gcc-8"
 
 # arm64 boards: juno, ls2088a, hikey, db410c
-for board in juno ls2088a hikey dragonboard-410c; do
+for MACHINE in juno ls2088a hikey dragonboard-410c; do
   echo
   echo "====================================================="
-  echo "Now submitting jobs for ${board^^}"
+  echo "Now submitting jobs for ${MACHINE^^}"
   unset DEVICE_TYPE
   unset KERNEL_URL
   unset DTB_FILENAME
@@ -53,7 +53,7 @@ for board in juno ls2088a hikey dragonboard-410c; do
 
   LAVA_SERVER=https://lkft.validation.linaro.org/RPC2/
   S3_BUCKET="storage.staging.lkft.org"
-  case "${board}" in
+  case "${MACHINE}" in
     dragonboard-410c)
       # Qualcomm's Dragonboard 410c
       DEVICE_TYPE=dragonboard-410c
