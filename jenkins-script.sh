@@ -36,8 +36,7 @@ S3_BUCKET="storage.staging.lkft.org"
 PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
 ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/arm64/defconfig%2Blkft/gcc-8"
 
-# arm64 boards: juno, ls2088a, hikey, db410c
-for MACHINE in juno ls2088a hikey dragonboard-410c; do
+submit_for_machine() {
   echo
   echo "====================================================="
   echo "Now submitting jobs for ${MACHINE^^}"
@@ -134,14 +133,12 @@ TDEFINITIONS_REVISION=master
 EOF
   echo
   echo "---vvv------variables.ini------vvv---"
-  #echo "${WORKDIR}/variables.ini:"
   cat "${WORKDIR}/variables.ini"
   echo "---^^^------variables.ini------^^^---"
 
   # Generate and submit tests
   cd "${WORKDIR}/lava-test-plans"
   set -x
-  #LTP_TESTCASES=$(find testcases/ -name ltp* | sed -e 's#^testcases/##g')
   python3 "${WORKDIR}/lava-test-plans/submit_for_testing.py" \
     ${DRY_RUN} \
     --variables "${WORKDIR}/variables.ini" \
@@ -154,4 +151,8 @@ EOF
     --git-commit "${GIT_DESCRIBE}" \
     --test-plan lkft-sanity
   set +x
+}
+# arm64 boards: juno, ls2088a, hikey, db410c
+for MACHINE in juno ls2088a hikey dragonboard-410c; do
+  submit_for_machine ${MACHINE}
 done
