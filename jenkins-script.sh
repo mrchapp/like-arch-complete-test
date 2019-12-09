@@ -36,7 +36,34 @@ S3_BUCKET="storage.staging.lkft.org"
 PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
 ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/arm64/defconfig%2Blkft/gcc-8"
 
-submit_for_machine() {
+# Generate and submit tests
+# $1: Location of variables.ini file
+# This argument is required.
+generate_submit_tests() {
+  cd "${WORKDIR}/lava-test-plans"
+  set -x
+  python3 "${WORKDIR}/lava-test-plans/submit_for_testing.py" \
+    ${DRY_RUN} \
+    --variables "${WORKDIR}/variables.ini" \
+    --device-type ${DEVICE_TYPE} \
+    --build-number "${BUILD_NUMBER}" \
+    --lava-server ${LAVA_SERVER} \
+    --qa-server https://qa-reports.linaro.org \
+    --qa-server-team staging-lkft \
+    --qa-server-project linux-mainline-oe \
+    --git-commit "${GIT_DESCRIBE}" \
+    --test-plan lkft-sanity
+  set +x
+}
+
+# Create variables.ini for the specified MACHINE
+# $1: MACHINE to create the variables.ini for
+# This argument is required.
+#
+# This variables affect the produced variables.ini:
+#   ARCH_ARTIFACTS
+
+create_vars_for_machine() {
   echo
   echo "====================================================="
   echo "Now submitting jobs for ${MACHINE^^}"
@@ -136,23 +163,9 @@ EOF
   cat "${WORKDIR}/variables.ini"
   echo "---^^^------variables.ini------^^^---"
 
-  # Generate and submit tests
-  cd "${WORKDIR}/lava-test-plans"
-  set -x
-  python3 "${WORKDIR}/lava-test-plans/submit_for_testing.py" \
-    ${DRY_RUN} \
-    --variables "${WORKDIR}/variables.ini" \
-    --device-type ${DEVICE_TYPE} \
-    --build-number "${BUILD_NUMBER}" \
-    --lava-server ${LAVA_SERVER} \
-    --qa-server https://qa-reports.linaro.org \
-    --qa-server-team staging-lkft \
-    --qa-server-project linux-mainline-oe \
-    --git-commit "${GIT_DESCRIBE}" \
-    --test-plan lkft-sanity
-  set +x
+  generate_submit_tests "${WORKDIR}/variables.ini"
 }
 # arm64 boards: juno, ls2088a, hikey, db410c
 for MACHINE in juno ls2088a hikey dragonboard-410c; do
-  submit_for_machine ${MACHINE}
+  create_vars_for_machine ${MACHINE}
 done
