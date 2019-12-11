@@ -99,12 +99,12 @@ create_vars_for_machine() {
     BOOT_IMG_FILENAME=boot-0.0+AUTOINC+2d8c108bf0-ed8112606c-r0-hikey-20191127221144-2279.uefi.img
     #KERNEL_IMG_FILENAME=Image--5.4+git0+95f1fa9e34-r0-hikey-20191127221144-2279.bin
     DTB_FILENAME=dtbs/hisilicon/hi6220-hikey.dtb
-    ROOTFS_IMG_FILENAME=rpb-console-image-lkft-hikey-20191127221144-2279.rootfs.img.gz
+    EXT4GZ_FILENAME=rpb-console-image-lkft-hikey-20191127221144-2279.rootfs.ext4.gz
     S3_BUCKET="snapshots.linaro.org"
     ROOTFS_PUB_DEST="openembedded/lkft/lkft/sumo/hikey/lkft/linux-mainline/2279"
     BOOT_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
     #KERNEL_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${KERNEL_IMG_FILENAME}
-    ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_IMG_FILENAME}
+    ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${EXT4GZ_FILENAME}
     ;;
   juno)
     # Arm's Juno
