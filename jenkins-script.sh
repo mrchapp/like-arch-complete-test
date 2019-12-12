@@ -77,6 +77,7 @@ create_vars_for_machine() {
   KERNEL_URL=${ARCH_ARTIFACTS}/Image
   MODULES_URL=${ARCH_ARTIFACTS}/modules.tar.xz
   BOOT_URL=
+  TAGS=
 
   case "${MACHINE}" in
   dragonboard-410c)
@@ -88,6 +89,7 @@ create_vars_for_machine() {
     ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/dragonboard-410c/${ROOTFS_BUILDNR_PUB_DEST}"
     BOOT_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
     ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
+    TAGS="[old-firmware]"
     ;;
   hikey)
     # HiKey
@@ -151,6 +153,7 @@ LXC_BOOT_FILE=boot.img
 LXC_ROOTFS_FILE=rpb-console-image-lkft.rootfs.img
 PROJECT=lkft-
 EOF
+  [[ -n ${TAGS} ]] && echo "TAGS=${TAGS}" >>"${WORKDIR}/variables.ini"
   echo
   echo "---vvv------variables.ini------vvv---"
   cat "${WORKDIR}/variables.ini"
