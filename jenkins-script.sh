@@ -136,9 +136,17 @@ create_vars_for_machine() {
     KERNEL_NAME=bzImage
     ROOTFS_FILENAME=rpb-console-image-lkft-intel-corei7-64-20190923201627.rootfs.tar.xz
     ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/x86_64_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+    BOOT_OS_PROMPT='root@intel-corei7-64:'
+    ;;
+  intel-core2-32)
+    # intel-core2-32
+    DEVICE_TYPE=i386
+    KERNEL_NAME=bzImage
+    ROOTFS_FILENAME=rpb-console-image-lkft-intel-core2-32-20190923201631.rootfs.tar.xz
+    ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/i386_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
     BOOT_URL=${KERNEL_URL}
-    BOOT_OS_PROMPT='root@intel-corei7-64:'
+    BOOT_OS_PROMPT='root@intel-core2-32:'
     ;;
   esac
 
@@ -208,6 +216,11 @@ case "${ARCH}" in
     ;;
   x86_64)
     for MACHINE in intel-corei7-64; do
+      create_vars_for_machine ${MACHINE}
+    done
+    ;;
+  i386)
+    for MACHINE in intel-core2-32; do
       create_vars_for_machine ${MACHINE}
     done
     ;;
