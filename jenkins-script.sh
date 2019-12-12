@@ -74,8 +74,7 @@ create_vars_for_machine() {
   ROOTFS_RELEASE_PUB_DEST="rootfs/oe-lkft-sumo"
   ROOTFS_BUILDNR_PUB_DEST="62"
   ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/gcc-8"
-  KERNEL_URL=${ARCH_ARTIFACTS}/Image
-  MODULES_URL=${ARCH_ARTIFACTS}/modules.tar.xz
+  KERNEL_NAME=Image
   BOOT_URL=
   TAGS=
   BOOT_LABEL=
@@ -123,20 +122,24 @@ create_vars_for_machine() {
     LAVA_SERVER=nxp
     BOOT_OS_PROMPT=''
     ;;
-  x15)
+  am57xx-evm)
     # am57xx-evm
     DEVICE_TYPE=x15
+    KERNEL_NAME=zImage
     DTB_FILENAME=dtbs/am57xx-beagle-x15.dtb
     ROOTFS_FILENAME=rpb-console-image-lkft-am57xx-evm-20190923201632.rootfs.ext4.gz
     ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/am57xx-evm/${ROOTFS_BUILDNR_PUB_DEST}"
     ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
-    ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/arm/multi_v7_defconfig%2Blkft/gcc-8"
-    KERNEL_URL=${ARCH_ARTIFACTS}/zImage
+    ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/multi_v7_defconfig%2Blkft/gcc-8"
+    KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
     BOOT_URL=${KERNEL_URL}
     BOOT_OS_PROMPT='root@am57xx-evm:'
     BOOT_LABEL="kernel"
     ;;
   esac
+
+  KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
+  MODULES_URL=${ARCH_ARTIFACTS}/modules.tar.xz
 
   cat <<EOF >"${WORKDIR}/variables.ini"
 DEVICE_TYPE=${DEVICE_TYPE}
