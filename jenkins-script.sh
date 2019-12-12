@@ -78,6 +78,7 @@ create_vars_for_machine() {
   MODULES_URL=${ARCH_ARTIFACTS}/modules.tar.xz
   BOOT_URL=
   TAGS=
+  BOOT_LABEL=
 
   case "${MACHINE}" in
   dragonboard-410c)
@@ -90,6 +91,7 @@ create_vars_for_machine() {
     BOOT_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
     ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
     TAGS="[old-firmware]"
+    BOOT_OS_PROMPT='dragonboard-410c:'
     ;;
   hikey)
     # HiKey
@@ -100,6 +102,7 @@ create_vars_for_machine() {
     ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/hikey/${ROOTFS_BUILDNR_PUB_DEST}"
     BOOT_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
     ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
+    BOOT_OS_PROMPT='hikey:~'
     ;;
   juno)
     # Arm's Juno
@@ -108,6 +111,7 @@ create_vars_for_machine() {
     ROOTFS_FILENAME=rpb-console-image-lkft-juno-20190923201430.rootfs.tar.xz
     ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/juno/${ROOTFS_BUILDNR_PUB_DEST}"
     ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
+    BOOT_OS_PROMPT=''
     ;;
   ls2088a)
     # NXP's LS2088A RDB
@@ -117,6 +121,20 @@ create_vars_for_machine() {
     ROOTFS_URL=http://people.linaro.org/~daniel.diaz/lkft-nxp/images/${ROOTFS_FILENAME}
     #LAVA_SERVER=http://59.144.98.45/RPC2/
     LAVA_SERVER=nxp
+    BOOT_OS_PROMPT=''
+    ;;
+  x15)
+    # am57xx-evm
+    DEVICE_TYPE=x15
+    DTB_FILENAME=dtbs/am57xx-beagle-x15.dtb
+    ROOTFS_FILENAME=rpb-console-image-lkft-am57xx-evm-20190923201632.rootfs.ext4.gz
+    ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/am57xx-evm/${ROOTFS_BUILDNR_PUB_DEST}"
+    ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
+    ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/arm/multi_v7_defconfig%2Blkft/gcc-8"
+    KERNEL_URL=${ARCH_ARTIFACTS}/zImage
+    BOOT_URL=${KERNEL_URL}
+    BOOT_OS_PROMPT='root@am57xx-evm:'
+    BOOT_LABEL="kernel"
     ;;
   esac
 
@@ -152,8 +170,11 @@ LXC_PTABLE_FILE=ptable-linux-8g.img
 LXC_BOOT_FILE=boot.img
 LXC_ROOTFS_FILE=rpb-console-image-lkft.rootfs.img
 PROJECT=lkft-
+DEPLOY_OS=oe
 EOF
   [[ -n ${TAGS} ]] && echo "TAGS=${TAGS}" >>"${WORKDIR}/variables.ini"
+  [[ -n ${BOOT_OS_PROMPT} ]] && echo "BOOT_OS_PROMPT=${BOOT_OS_PROMPT}" >>"${WORKDIR}/variables.ini"
+  [[ -n ${BOOT_LABEL} ]] && echo "BOOT_LABEL=${BOOT_LABEL}" >>"${WORKDIR}/variables.ini"
   echo
   echo "---vvv------variables.ini------vvv---"
   cat "${WORKDIR}/variables.ini"
@@ -167,11 +188,11 @@ EOF
 #for MACHINE in juno ls2088a hikey dragonboard-410c am57xx-evm; do
 echo ========================== "ARCH=${ARCH}"
 case "${ARCH}" in
-#  arm)
-#    for MACHINE in am57xx-evm; do
-#      create_vars_for_machine ${MACHINE}
-#    done
-#    ;;
+  arm)
+    for MACHINE in am57xx-evm; do
+      create_vars_for_machine ${MACHINE}
+    done
+    ;;
   arm64)
     for MACHINE in juno ls2088a hikey dragonboard-410c; do
       create_vars_for_machine ${MACHINE}
