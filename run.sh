@@ -1,6 +1,7 @@
 #!/bin/bash
 
-JENKINS_PARAMETERS_FILE="${1:-$(dirname "$(readlink -e "$0")")/jenkins-parameters-822.sh}"
+ROOT_DIR="$(dirname "$(readlink -e "$0")")"
+JENKINS_PARAMETERS_FILE="${1:-${ROOT_DIR}/jenkins-parameters-822.sh}"
 if [ -e "${JENKINS_PARAMETERS_FILE}" ]; then
   set -a
   . "${JENKINS_PARAMETERS_FILE}"
@@ -15,4 +16,4 @@ if [ ! -v WORKSPACE ]; then
   exit 1
 fi
 mkdir -p "${WORKSPACE}"
-./jenkins-script.sh
+"${ROOT_DIR}/jenkins-script.sh"
