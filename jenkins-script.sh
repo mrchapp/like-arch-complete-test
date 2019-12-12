@@ -72,6 +72,7 @@ create_vars_for_machine() {
   PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
   ROOTFS_RELEASE_PUB_DEST="rootfs/oe-lkft-sumo"
   ROOTFS_BUILDNR_PUB_DEST="62"
+  ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/${MACHINE}/${ROOTFS_BUILDNR_PUB_DEST}"
   GCC_VER_PUB_DEST="gcc-8"
   ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/${GCC_VER_PUB_DEST}"
   KERNEL_NAME=Image
@@ -87,7 +88,6 @@ create_vars_for_machine() {
     DTB_FILENAME=dtbs/qcom/apq8016-sbc.dtb
     BOOT_IMG_FILENAME=boot--5.2+git0+0ecfebd2b5-r0-dragonboard-410c-20190910203807.img
     ROOTFS_FILENAME=rpb-console-image-lkft-dragonboard-410c-20190923201628.rootfs.ext4.gz
-    ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/dragonboard-410c/${ROOTFS_BUILDNR_PUB_DEST}"
     BOOT_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
     ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
     TAGS="[old-firmware]"
@@ -99,7 +99,6 @@ create_vars_for_machine() {
     DTB_FILENAME=dtbs/hisilicon/hi6220-hikey.dtb
     BOOT_IMG_FILENAME=boot-0.0+AUTOINC+2d8c108bf0-ed8112606c-r0-hikey-20190911025241.uefi.img
     ROOTFS_FILENAME=rpb-console-image-lkft-hikey-20190923201702.rootfs.ext4.gz
-    ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/hikey/${ROOTFS_BUILDNR_PUB_DEST}"
     BOOT_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
     ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
     BOOT_OS_PROMPT='hikey:~'
@@ -109,7 +108,6 @@ create_vars_for_machine() {
     DEVICE_TYPE=juno-r2
     DTB_FILENAME=dtbs/arm/juno-r2.dtb
     ROOTFS_FILENAME=rpb-console-image-lkft-juno-20190923201430.rootfs.tar.xz
-    ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/juno/${ROOTFS_BUILDNR_PUB_DEST}"
     ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
     BOOT_OS_PROMPT=''
     ;;
@@ -129,7 +127,6 @@ create_vars_for_machine() {
     KERNEL_NAME=zImage
     DTB_FILENAME=dtbs/am57xx-beagle-x15.dtb
     ROOTFS_FILENAME=rpb-console-image-lkft-am57xx-evm-20190923201632.rootfs.ext4.gz
-    ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/am57xx-evm/${ROOTFS_BUILDNR_PUB_DEST}"
     ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
     ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/multi_v7_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
@@ -142,7 +139,6 @@ create_vars_for_machine() {
     DEVICE_TYPE=x86
     KERNEL_NAME=bzImage
     ROOTFS_FILENAME=rpb-console-image-lkft-intel-corei7-64-20190923201627.rootfs.tar.xz
-    ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/intel-corei7-64/${ROOTFS_BUILDNR_PUB_DEST}"
     ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
     ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/x86_64_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
