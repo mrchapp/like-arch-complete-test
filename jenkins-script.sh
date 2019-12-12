@@ -62,7 +62,6 @@ create_vars_for_machine() {
   echo "====================================================="
   echo "Now submitting jobs for ${MACHINE^^}"
   unset DEVICE_TYPE
-  unset DTB_FILENAME
   unset ROOTFS_FILENAME
   unset ROOTFS_PUB_DEST
   unset ROOTFS_URL
@@ -76,6 +75,7 @@ create_vars_for_machine() {
   GCC_VER_PUB_DEST="gcc-8"
   ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/${GCC_VER_PUB_DEST}"
   KERNEL_NAME=Image
+  DTB_FILENAME=
   BOOT_URL=
   TAGS=
   BOOT_LABEL=
@@ -137,6 +137,18 @@ create_vars_for_machine() {
     BOOT_OS_PROMPT='root@am57xx-evm:'
     BOOT_LABEL="kernel"
     ;;
+  intel-corei7-64)
+    # intel-corei7-64
+    DEVICE_TYPE=x86
+    KERNEL_NAME=bzImage
+    ROOTFS_FILENAME=rpb-console-image-lkft-intel-corei7-64-20190923201627.rootfs.tar.xz
+    ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/intel-corei7-64/${ROOTFS_BUILDNR_PUB_DEST}"
+    ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
+    ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/x86_64_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+    KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
+    BOOT_URL=${KERNEL_URL}
+    BOOT_OS_PROMPT='root@intel-corei7-64:'
+    ;;
   esac
 
   KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
@@ -150,7 +162,6 @@ BUILD_NUMBER=${BUILD_NUMBER}
 BUILD_URL=http://ci.staging.lkft.org/job/kernel-arch-complete/${BUILD_NUMBER}/
 KERNEL_URL=${KERNEL_URL}
 MODULES_URL=${MODULES_URL}
-DTB_URL=${ARCH_ARTIFACTS}/${DTB_FILENAME}
 KERNEL_CONFIG_URL=${ARCH_ARTIFACTS}/kernel.config
 #
 KERNEL_DESCRIBE=${GIT_DESCRIBE}
@@ -179,6 +190,7 @@ EOF
   [[ -n ${TAGS} ]] && echo "TAGS=${TAGS}" >>"${WORKDIR}/variables.ini"
   [[ -n ${BOOT_OS_PROMPT} ]] && echo "BOOT_OS_PROMPT=${BOOT_OS_PROMPT}" >>"${WORKDIR}/variables.ini"
   [[ -n ${BOOT_LABEL} ]] && echo "BOOT_LABEL=${BOOT_LABEL}" >>"${WORKDIR}/variables.ini"
+  [[ -n ${DTB_FILENAME} ]] && echo "DTB_URL=${ARCH_ARTIFACTS}/${DTB_FILENAME}" >>"${WORKDIR}/variables.ini"
   echo
   echo "---vvv------variables.ini------vvv---"
   cat "${WORKDIR}/variables.ini"
@@ -199,6 +211,11 @@ case "${ARCH}" in
     ;;
   arm64)
     for MACHINE in juno ls2088a hikey dragonboard-410c; do
+      create_vars_for_machine ${MACHINE}
+    done
+    ;;
+  x86_64)
+    for MACHINE in intel-corei7-64; do
       create_vars_for_machine ${MACHINE}
     done
     ;;
