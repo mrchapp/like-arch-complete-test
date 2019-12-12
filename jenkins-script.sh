@@ -8,8 +8,6 @@ set -u
 echo
 echo "git describe: [$GIT_DESCRIBE]"
 
-[ "${ARCH}" = "arm64" ] || exit 0
-
 if [[ -v HUDSON_COOKIE ]] || [[ -v GITLAB_CI ]]; then
   sudo pip3 install jinja2-cli ruamel.yaml
   DRY_RUN=""
@@ -34,7 +32,7 @@ fi
 
 S3_BUCKET="storage.staging.lkft.org"
 PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
-ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/arm64/defconfig%2Blkft/gcc-8"
+ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/gcc-8"
 KERNEL_URL=${ARCH_ARTIFACTS}/Image
 MODULES_URL=${ARCH_ARTIFACTS}/modules.tar.xz
 
@@ -167,7 +165,20 @@ EOF
 
   generate_submit_tests "${WORKDIR}/variables.ini"
 }
+
 # arm64 boards: juno, ls2088a, hikey, db410c
-for MACHINE in juno ls2088a hikey dragonboard-410c; do
-  create_vars_for_machine ${MACHINE}
-done
+# arm32 boards: am57xx-evm
+#for MACHINE in juno ls2088a hikey dragonboard-410c am57xx-evm; do
+echo ========================== "ARCH=${ARCH}"
+case "${ARCH}" in
+#  arm)
+#    for MACHINE in am57xx-evm; do
+#      create_vars_for_machine ${MACHINE}
+#    done
+#    ;;
+  arm64)
+    for MACHINE in juno ls2088a hikey dragonboard-410c; do
+      create_vars_for_machine ${MACHINE}
+    done
+    ;;
+esac
