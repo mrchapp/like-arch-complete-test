@@ -64,7 +64,6 @@ create_vars_for_machine() {
   unset DEVICE_TYPE
   unset ROOTFS_FILENAME
   unset ROOTFS_PUB_DEST
-  unset ROOTFS_URL
   unset BOOT_IMG_FILENAME
 
   LAVA_SERVER=https://lkft.validation.linaro.org/RPC2/
@@ -80,6 +79,7 @@ create_vars_for_machine() {
   BOOT_URL=
   TAGS=
   BOOT_LABEL=
+  ROOTFS_URL=
 
   case "${MACHINE}" in
   dragonboard-410c)
@@ -89,7 +89,6 @@ create_vars_for_machine() {
     BOOT_IMG_FILENAME=boot--5.2+git0+0ecfebd2b5-r0-dragonboard-410c-20190910203807.img
     ROOTFS_FILENAME=rpb-console-image-lkft-dragonboard-410c-20190923201628.rootfs.ext4.gz
     BOOT_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
-    ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
     TAGS="[old-firmware]"
     BOOT_OS_PROMPT='dragonboard-410c:'
     ;;
@@ -100,7 +99,6 @@ create_vars_for_machine() {
     BOOT_IMG_FILENAME=boot-0.0+AUTOINC+2d8c108bf0-ed8112606c-r0-hikey-20190911025241.uefi.img
     ROOTFS_FILENAME=rpb-console-image-lkft-hikey-20190923201702.rootfs.ext4.gz
     BOOT_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
-    ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
     BOOT_OS_PROMPT='hikey:~'
     ;;
   juno)
@@ -108,7 +106,6 @@ create_vars_for_machine() {
     DEVICE_TYPE=juno-r2
     DTB_FILENAME=dtbs/arm/juno-r2.dtb
     ROOTFS_FILENAME=rpb-console-image-lkft-juno-20190923201430.rootfs.tar.xz
-    ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
     BOOT_OS_PROMPT=''
     ;;
   ls2088a)
@@ -127,7 +124,6 @@ create_vars_for_machine() {
     KERNEL_NAME=zImage
     DTB_FILENAME=dtbs/am57xx-beagle-x15.dtb
     ROOTFS_FILENAME=rpb-console-image-lkft-am57xx-evm-20190923201632.rootfs.ext4.gz
-    ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
     ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/multi_v7_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
     BOOT_URL=${KERNEL_URL}
@@ -139,7 +135,6 @@ create_vars_for_machine() {
     DEVICE_TYPE=x86
     KERNEL_NAME=bzImage
     ROOTFS_FILENAME=rpb-console-image-lkft-intel-corei7-64-20190923201627.rootfs.tar.xz
-    ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
     ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/x86_64_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
     BOOT_URL=${KERNEL_URL}
@@ -149,6 +144,7 @@ create_vars_for_machine() {
 
   KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
   MODULES_URL=${ARCH_ARTIFACTS}/modules.tar.xz
+  [[ -z ${ROOTFS_URL} ]] && ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
 
   cat <<EOF >"${WORKDIR}/variables.ini"
 DEVICE_TYPE=${DEVICE_TYPE}
