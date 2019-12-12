@@ -30,12 +30,6 @@ else
   fi
 fi
 
-S3_BUCKET="storage.staging.lkft.org"
-PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
-ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/gcc-8"
-KERNEL_URL=${ARCH_ARTIFACTS}/Image
-MODULES_URL=${ARCH_ARTIFACTS}/modules.tar.xz
-
 # Generate and submit tests
 # $1: Location of variables.ini file
 # This argument is required.
@@ -69,8 +63,7 @@ create_vars_for_machine() {
   echo "Now submitting jobs for ${MACHINE^^}"
   unset DEVICE_TYPE
   unset DTB_FILENAME
-  unset EXT4GZ_FILENAME
-  unset TARXZ_FILENAME
+  unset ROOTFS_FILENAME
   unset ROOTFS_PUB_DEST
   unset ROOTFS_URL
   unset BOOT_IMG_FILENAME
@@ -78,47 +71,49 @@ create_vars_for_machine() {
 
   LAVA_SERVER=https://lkft.validation.linaro.org/RPC2/
   S3_BUCKET="storage.staging.lkft.org"
+  PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
+  ROOTFS_RELEASE_PUB_DEST="rootfs/oe-lkft-sumo"
+  ROOTFS_BUILDNR_PUB_DEST="62"
+  ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/gcc-8"
+  KERNEL_URL=${ARCH_ARTIFACTS}/Image
+  MODULES_URL=${ARCH_ARTIFACTS}/modules.tar.xz
+
   case "${MACHINE}" in
   dragonboard-410c)
     # Qualcomm's Dragonboard 410c
     DEVICE_TYPE=dragonboard-410c
-    BOOT_IMG_FILENAME=boot--5.2+git0+0ecfebd2b5-r0-dragonboard-410c-20190910203807.img
-    EXT4GZ_FILENAME=rpb-console-image-lkft-dragonboard-410c-20190923201628.rootfs.ext4.gz
     DTB_FILENAME=dtbs/qcom/apq8016-sbc.dtb
-    ROOTFS_PUB_DEST="rootfs/oe-lkft-sumo/dragonboard-410c/62"
+    BOOT_IMG_FILENAME=boot--5.2+git0+0ecfebd2b5-r0-dragonboard-410c-20190910203807.img
+    ROOTFS_FILENAME=rpb-console-image-lkft-dragonboard-410c-20190923201628.rootfs.ext4.gz
+    ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/dragonboard-410c/${ROOTFS_BUILDNR_PUB_DEST}"
     BOOT_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
-    ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${EXT4GZ_FILENAME}
+    ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
     ;;
   hikey)
     # HiKey
     DEVICE_TYPE=hi6220-hikey
-    BOOT_IMG_FILENAME=boot-0.0+AUTOINC+2d8c108bf0-ed8112606c-r0-hikey-20190911025241.uefi.img
-    #ROOTFS_PUB_DEST="rootfs/oe-lkft-sumo/juno/60"
-    BOOT_IMG_FILENAME=boot-0.0+AUTOINC+2d8c108bf0-ed8112606c-r0-hikey-20191127221144-2279.uefi.img
-    #KERNEL_IMG_FILENAME=Image--5.4+git0+95f1fa9e34-r0-hikey-20191127221144-2279.bin
     DTB_FILENAME=dtbs/hisilicon/hi6220-hikey.dtb
-    EXT4GZ_FILENAME=rpb-console-image-lkft-hikey-20191127221144-2279.rootfs.ext4.gz
-    S3_BUCKET="snapshots.linaro.org"
-    ROOTFS_PUB_DEST="openembedded/lkft/lkft/sumo/hikey/lkft/linux-mainline/2279"
+    BOOT_IMG_FILENAME=boot-0.0+AUTOINC+2d8c108bf0-ed8112606c-r0-hikey-20190911025241.uefi.img
+    ROOTFS_FILENAME=rpb-console-image-lkft-hikey-20190923201702.rootfs.ext4.gz
+    ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/hikey/${ROOTFS_BUILDNR_PUB_DEST}"
     BOOT_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
-    #KERNEL_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${KERNEL_IMG_FILENAME}
-    ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${EXT4GZ_FILENAME}
+    ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
     ;;
   juno)
     # Arm's Juno
     DEVICE_TYPE=juno-r2
     DTB_FILENAME=dtbs/arm/juno-r2.dtb
-    TARXZ_FILENAME=rpb-console-image-lkft-juno-20190911025238.rootfs.tar.xz
-    ROOTFS_PUB_DEST="rootfs/oe-lkft-sumo/juno/60"
-    ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${TARXZ_FILENAME}
+    ROOTFS_FILENAME=rpb-console-image-lkft-juno-20190923201430.rootfs.tar.xz
+    ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/juno/${ROOTFS_BUILDNR_PUB_DEST}"
+    ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
     BOOT_URL=
     ;;
   ls2088a)
     # NXP's LS2088A RDB
     DEVICE_TYPE=nxp-ls2088
     DTB_FILENAME=dtbs/freescale/fsl-ls2088a-rdb.dtb
-    TARXZ_FILENAME=rpb-console-image-lkft-ls2088ardb-20191019001216.rootfs.tar.xz
-    ROOTFS_URL=http://people.linaro.org/~daniel.diaz/lkft-nxp/images/${TARXZ_FILENAME}
+    ROOTFS_FILENAME=rpb-console-image-lkft-ls2088ardb-20191019001216.rootfs.tar.xz
+    ROOTFS_URL=http://people.linaro.org/~daniel.diaz/lkft-nxp/images/${ROOTFS_FILENAME}
     #LAVA_SERVER=http://59.144.98.45/RPC2/
     LAVA_SERVER=nxp
     BOOT_URL=
