@@ -74,7 +74,16 @@ create_vars_for_machine() {
   BASE_URL="http://storage.staging.lkft.org"
   ROOTFS_RELEASE_PUB_DEST="rootfs/oe-lkft-sumo"
   ROOTFS_BUILDNR_PUB_DEST="74"
-  ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/${MACHINE}/${ROOTFS_BUILDNR_PUB_DEST}"
+
+  case "${MACHINE}" in
+  qemu_arm) MACHINE_PUB_DEST=am57xx-evm  ;;
+  qemu_arm64) MACHINE_PUB_DEST=juno  ;;
+  qemu_x86_64) MACHINE_PUB_DEST=intel-corei7-64  ;;
+  qemu_i386) MACHINE_PUB_DEST=intel-core2-32  ;;
+  *) MACHINE_PUB_DEST=${MACHINE} ;;
+  esac
+
+  ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/${MACHINE_PUB_DEST}/${ROOTFS_BUILDNR_PUB_DEST}"
   GCC_VER_PUB_DEST="gcc-8"
   KERNEL_NAME=Image
   QA_PROJECT="linux-mainline-oe"
@@ -86,6 +95,7 @@ create_vars_for_machine() {
   ROOTFS_URL=
   MODULES_URL_COMP=
   ROOTFS_URL_COMP=
+  DEPLOY_TARGET=
 
   if [[ -v GITLAB_CI ]]; then
     DOWNLOAD_URL="$(jq .download_url build.json | tr -d \")"
@@ -137,6 +147,7 @@ create_vars_for_machine() {
     BOOT_URL=${BASE_URL}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
     TAGS="[old-firmware]"
     BOOT_OS_PROMPT='dragonboard-410c:'
+    DEPLOY_TARGET="download"
     ;;
   hikey)
     # HiKey
@@ -146,8 +157,9 @@ create_vars_for_machine() {
     ROOTFS_FILENAME=rpb-console-image-lkft-hikey-20191216215523.rootfs.ext4.gz
     BOOT_URL=${BASE_URL}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
     BOOT_OS_PROMPT='hikey:~'
+    DEPLOY_TARGET="download"
     ;;
-  juno)
+  juno|qemu_arm64)
     # Arm's Juno
     DEVICE_TYPE=juno-r2
     DTB_FILENAME=dtbs/arm/juno-r2.dtb
@@ -155,6 +167,15 @@ create_vars_for_machine() {
     BOOT_OS_PROMPT=''
     MODULES_URL_COMP="xz"
     ROOTFS_URL_COMP="xz"
+    if [[ "${MACHINE}" == "qemu_arm64" ]]; then
+      DEVICE_TYPE=qemu_arm64
+      DTB_FILENAME=
+      DEPLOY_TARGET="tmpfs"
+      ROOTFS_FILENAME=rpb-console-image-lkft-juno-20191216215525.rootfs.ext4.gz
+      ROOTFS_URL_COMP="gz"
+      KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
+      BOOT_URL=${KERNEL_URL}
+    fi
     ;;
   ls2088a)
     # NXP's LS2088A RDB
@@ -167,7 +188,7 @@ create_vars_for_machine() {
     BOOT_OS_PROMPT=''
     LKFT_TEST_PLAN="lkft-full"
     ;;
-  am57xx-evm)
+  am57xx-evm|qemu_arm)
     # am57xx-evm
     DEVICE_TYPE=x15
     KERNEL_NAME=zImage
@@ -177,8 +198,16 @@ create_vars_for_machine() {
     BOOT_URL=${KERNEL_URL}
     BOOT_OS_PROMPT='root@am57xx-evm:'
     BOOT_LABEL="kernel"
+    DEPLOY_TARGET="download"
+    if [[ "${MACHINE}" == "qemu_arm" ]]; then
+      DEVICE_TYPE=qemu_arm
+      DTB_FILENAME=
+      DEPLOY_TARGET="tmpfs"
+      MODULES_URL_COMP="xz"
+      ROOTFS_URL_COMP="gz"
+    fi
     ;;
-  intel-corei7-64)
+  intel-corei7-64|qemu_x86_64)
     # intel-corei7-64
     DEVICE_TYPE=x86
     KERNEL_NAME=bzImage
@@ -188,8 +217,14 @@ create_vars_for_machine() {
     BOOT_OS_PROMPT='root@intel-corei7-64:'
     MODULES_URL_COMP="xz"
     ROOTFS_URL_COMP="xz"
+    if [[ "${MACHINE}" == "qemu_x86_64" ]]; then
+      DEVICE_TYPE=qemu_x86_64
+      DEPLOY_TARGET="tmpfs"
+      ROOTFS_FILENAME=rpb-console-image-lkft-intel-corei7-64-20191216215547.rootfs.ext4.gz
+      ROOTFS_URL_COMP="gz"
+    fi
     ;;
-  intel-core2-32)
+  intel-core2-32|qemu_i386)
     # intel-core2-32
     DEVICE_TYPE=i386
     KERNEL_NAME=bzImage
@@ -199,6 +234,12 @@ create_vars_for_machine() {
     BOOT_OS_PROMPT='root@intel-core2-32:'
     MODULES_URL_COMP="xz"
     ROOTFS_URL_COMP="xz"
+    if [[ "${MACHINE}" == "qemu_i386" ]]; then
+      DEVICE_TYPE=qemu_i386
+      DEPLOY_TARGET="tmpfs"
+      ROOTFS_FILENAME=rpb-console-image-lkft-intel-core2-32-20191216215604.rootfs.ext4.gz
+      ROOTFS_URL_COMP="gz"
+    fi
     ;;
   esac
 
@@ -246,6 +287,7 @@ EOF
   [[ -n ${DTB_FILENAME} ]] && echo "DTB_URL=${ARCH_ARTIFACTS}/${DTB_FILENAME}" >>"${WORKDIR}/variables.ini"
   [[ -n ${MODULES_URL_COMP} ]] && echo "MODULES_URL_COMP=${MODULES_URL_COMP}" >>"${WORKDIR}/variables.ini"
   [[ -n ${ROOTFS_URL_COMP} ]] && echo "ROOTFS_URL_COMP=${ROOTFS_URL_COMP}" >>"${WORKDIR}/variables.ini"
+  [[ -n ${DEPLOY_TARGET} ]] && echo "DEPLOY_TARGET=${DEPLOY_TARGET}" >>"${WORKDIR}/variables.ini"
   echo
   echo "---vvv------variables.ini------vvv---"
   cat "${WORKDIR}/variables.ini"
@@ -275,22 +317,22 @@ fi
 echo ========================== "ARCH=${ARCH}"
 case "${ARCH}" in
   arm)
-    for MACHINE in am57xx-evm; do
+    for MACHINE in am57xx-evm qemu_arm; do
       create_vars_for_machine ${MACHINE}
     done
     ;;
   arm64)
-    for MACHINE in juno ls2088a hikey dragonboard-410c; do
+    for MACHINE in juno ls2088a hikey dragonboard-410c qemu_arm64; do
       create_vars_for_machine ${MACHINE}
     done
     ;;
   x86_64)
-    for MACHINE in intel-corei7-64; do
+    for MACHINE in intel-corei7-64 qemu_x86_64; do
       create_vars_for_machine ${MACHINE}
     done
     ;;
   i386)
-    for MACHINE in intel-core2-32; do
+    for MACHINE in intel-core2-32 qemu_i386; do
       create_vars_for_machine ${MACHINE}
     done
     ;;
