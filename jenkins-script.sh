@@ -67,7 +67,6 @@ create_vars_for_machine() {
   unset ROOTFS_PUB_DEST
   unset ROOTFS_URL
   unset BOOT_IMG_FILENAME
-  unset BOOT_URL
 
   LAVA_SERVER=https://lkft.validation.linaro.org/RPC2/
   S3_BUCKET="storage.staging.lkft.org"
@@ -77,6 +76,7 @@ create_vars_for_machine() {
   ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/gcc-8"
   KERNEL_URL=${ARCH_ARTIFACTS}/Image
   MODULES_URL=${ARCH_ARTIFACTS}/modules.tar.xz
+  BOOT_URL=
 
   case "${MACHINE}" in
   dragonboard-410c)
@@ -106,7 +106,6 @@ create_vars_for_machine() {
     ROOTFS_FILENAME=rpb-console-image-lkft-juno-20190923201430.rootfs.tar.xz
     ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/juno/${ROOTFS_BUILDNR_PUB_DEST}"
     ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
-    BOOT_URL=
     ;;
   ls2088a)
     # NXP's LS2088A RDB
@@ -116,7 +115,6 @@ create_vars_for_machine() {
     ROOTFS_URL=http://people.linaro.org/~daniel.diaz/lkft-nxp/images/${ROOTFS_FILENAME}
     #LAVA_SERVER=http://59.144.98.45/RPC2/
     LAVA_SERVER=nxp
-    BOOT_URL=
     ;;
   esac
 
