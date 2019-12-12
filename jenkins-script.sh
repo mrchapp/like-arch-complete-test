@@ -73,7 +73,8 @@ create_vars_for_machine() {
   PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
   ROOTFS_RELEASE_PUB_DEST="rootfs/oe-lkft-sumo"
   ROOTFS_BUILDNR_PUB_DEST="62"
-  ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/gcc-8"
+  GCC_VER_PUB_DEST="gcc-8"
+  ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/${GCC_VER_PUB_DEST}"
   KERNEL_NAME=Image
   BOOT_URL=
   TAGS=
@@ -130,7 +131,7 @@ create_vars_for_machine() {
     ROOTFS_FILENAME=rpb-console-image-lkft-am57xx-evm-20190923201632.rootfs.ext4.gz
     ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/am57xx-evm/${ROOTFS_BUILDNR_PUB_DEST}"
     ROOTFS_URL=http://${S3_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
-    ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/multi_v7_defconfig%2Blkft/gcc-8"
+    ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/multi_v7_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
     BOOT_URL=${KERNEL_URL}
     BOOT_OS_PROMPT='root@am57xx-evm:'
