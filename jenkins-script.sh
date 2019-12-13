@@ -244,7 +244,13 @@ create_vars_for_machine() {
   esac
 
   KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
-  MODULES_URL=${ARCH_ARTIFACTS}/modules.tar.xz
+
+  if [[ $DEVICE_TYPE == *"qemu_"* ]]; then
+    MODULES_URL=
+    MODULES_URL_COMP=
+  else
+    MODULES_URL=${ARCH_ARTIFACTS}/modules.tar.xz
+  fi
 
   [[ -z ${ROOTFS_URL} ]] && ROOTFS_URL=${BASE_URL}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
 
@@ -255,7 +261,6 @@ PUB_DEST=${PUB_DEST}
 BUILD_NUMBER=${BUILD_NUMBER}
 BUILD_URL=${BUILD_URL}
 KERNEL_URL=${KERNEL_URL}
-MODULES_URL=${MODULES_URL}
 KERNEL_CONFIG_URL=${ARCH_ARTIFACTS}/kernel.config
 #
 KERNEL_DESCRIBE=${GIT_DESCRIBE}
@@ -285,6 +290,7 @@ EOF
   [[ -n ${BOOT_OS_PROMPT} ]] && echo "BOOT_OS_PROMPT=${BOOT_OS_PROMPT}" >>"${WORKDIR}/variables.ini"
   [[ -n ${BOOT_LABEL} ]] && echo "BOOT_LABEL=${BOOT_LABEL}" >>"${WORKDIR}/variables.ini"
   [[ -n ${DTB_FILENAME} ]] && echo "DTB_URL=${ARCH_ARTIFACTS}/${DTB_FILENAME}" >>"${WORKDIR}/variables.ini"
+  [[ -n ${MODULES_URL} ]] && echo "MODULES_URL=${MODULES_URL}" >>"${WORKDIR}/variables.ini"
   [[ -n ${MODULES_URL_COMP} ]] && echo "MODULES_URL_COMP=${MODULES_URL_COMP}" >>"${WORKDIR}/variables.ini"
   [[ -n ${ROOTFS_URL_COMP} ]] && echo "ROOTFS_URL_COMP=${ROOTFS_URL_COMP}" >>"${WORKDIR}/variables.ini"
   [[ -n ${DEPLOY_TARGET} ]] && echo "DEPLOY_TARGET=${DEPLOY_TARGET}" >>"${WORKDIR}/variables.ini"
