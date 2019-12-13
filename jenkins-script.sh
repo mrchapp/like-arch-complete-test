@@ -199,6 +199,21 @@ EOF
   generate_submit_tests "${WORKDIR}/variables.ini"
 }
 
+if [ -v board ]; then
+  MACHINE="${board}"
+  case "${board}" in
+    db410c) MACHINE="dragonboard-410c" ;;
+    i386)   MACHINE="intel-core2-32" ;;
+    x15)    MACHINE="am57xx-emv" ;;
+    x86_64) MACHINE="intel-corei7-64" ;;
+  esac
+
+  create_vars_for_machine "${MACHINE}"
+
+  # We're done here. Thank you, come again.
+  exit 0
+fi
+
 # arm64 boards: juno, ls2088a, hikey, db410c
 # arm32 boards: am57xx-evm
 #for MACHINE in juno ls2088a hikey dragonboard-410c am57xx-evm; do
