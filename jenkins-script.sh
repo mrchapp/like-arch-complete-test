@@ -179,6 +179,8 @@ create_vars_for_machine() {
     DEVICE_TYPE=x86
     KERNEL_NAME=bzImage
     ROOTFS_FILENAME=rpb-console-image-lkft-intel-corei7-64-20190923201627.rootfs.tar.xz
+    KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
+    BOOT_URL=${KERNEL_URL}
     BOOT_OS_PROMPT='root@intel-corei7-64:'
     ;;
   intel-core2-32)
