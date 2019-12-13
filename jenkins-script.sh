@@ -84,6 +84,8 @@ create_vars_for_machine() {
   TAGS=
   BOOT_LABEL=
   ROOTFS_URL=
+  MODULES_URL_COMP=
+  ROOTFS_URL_COMP=
 
   if [[ -v GITLAB_CI ]]; then
     DOWNLOAD_URL="$(jq .download_url build.json | tr -d \")"
@@ -151,6 +153,8 @@ create_vars_for_machine() {
     DTB_FILENAME=dtbs/arm/juno-r2.dtb
     ROOTFS_FILENAME=rpb-console-image-lkft-juno-20190923201430.rootfs.tar.xz
     BOOT_OS_PROMPT=''
+    MODULES_URL_COMP="xz"
+    ROOTFS_URL_COMP="xz"
     ;;
   ls2088a)
     # NXP's LS2088A RDB
@@ -182,6 +186,8 @@ create_vars_for_machine() {
     KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
     BOOT_URL=${KERNEL_URL}
     BOOT_OS_PROMPT='root@intel-corei7-64:'
+    MODULES_URL_COMP="xz"
+    ROOTFS_URL_COMP="xz"
     ;;
   intel-core2-32)
     # intel-core2-32
@@ -191,6 +197,8 @@ create_vars_for_machine() {
     KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
     BOOT_URL=${KERNEL_URL}
     BOOT_OS_PROMPT='root@intel-core2-32:'
+    MODULES_URL_COMP="xz"
+    ROOTFS_URL_COMP="xz"
     ;;
   esac
 
@@ -236,6 +244,8 @@ EOF
   [[ -n ${BOOT_OS_PROMPT} ]] && echo "BOOT_OS_PROMPT=${BOOT_OS_PROMPT}" >>"${WORKDIR}/variables.ini"
   [[ -n ${BOOT_LABEL} ]] && echo "BOOT_LABEL=${BOOT_LABEL}" >>"${WORKDIR}/variables.ini"
   [[ -n ${DTB_FILENAME} ]] && echo "DTB_URL=${ARCH_ARTIFACTS}/${DTB_FILENAME}" >>"${WORKDIR}/variables.ini"
+  [[ -n ${MODULES_URL_COMP} ]] && echo "MODULES_URL_COMP=${MODULES_URL_COMP}" >>"${WORKDIR}/variables.ini"
+  [[ -n ${ROOTFS_URL_COMP} ]] && echo "ROOTFS_URL_COMP=${ROOTFS_URL_COMP}" >>"${WORKDIR}/variables.ini"
   echo
   echo "---vvv------variables.ini------vvv---"
   cat "${WORKDIR}/variables.ini"
