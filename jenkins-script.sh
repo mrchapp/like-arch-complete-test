@@ -4,11 +4,11 @@ set -e
 #set -x
 set -u
 
-#env
+env
 echo
 echo "git describe: [$GIT_DESCRIBE]"
 
-if [[ -v HUDSON_COOKIE ]] || [[ -v GITLAB_CI ]]; then
+if [[ -v HUDSON_COOKIE ]] || [[ -v CI ]]; then
   sudo pip3 install jinja2-cli ruamel.yaml
   DRY_RUN=""
 else
@@ -16,7 +16,7 @@ else
 fi
 export DRY_RUN
 
-if [[ -v HUDSON_COOKIE ]] || [[ -v GITLAB_CI ]]; then
+if [[ -v HUDSON_COOKIE ]] || [[ -v CI ]]; then
   WORKDIR="${WORKSPACE:-${CI_PROJECT_DIR}}"
 else
   WORKDIR="$(dirname "$(readlink -e "$0")")/workspace"
