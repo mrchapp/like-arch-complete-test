@@ -96,6 +96,7 @@ create_vars_for_machine() {
     PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
     ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     KERNEL_DEFCONFIG_URL="http://${S3_BUCKET}/${PUB_DEST}/${BUILD_NUMBER}/defconfig"
+    BASE_URL=http://${S3_BUCKET}/
   fi
 
   case "${MACHINE}" in
