@@ -88,6 +88,8 @@ create_vars_for_machine() {
     BUILD_URL="${CI_PIPELINE_URL}"
     KERNEL_DEFCONFIG_URL="${DOWNLOAD_URL}/kernel.conf"
     BUILD_NUMBER="${CI_BUILD_ID}"
+    BASE_URL=$(echo "${DOWNLOAD_URL}" | cut -d/ -f1-3)
+    PUB_DEST=$(echo "${DOWNLOAD_URL}" | cut -d/ -f4-)
   else
     S3_BUCKET="storage.staging.lkft.org"
     PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
