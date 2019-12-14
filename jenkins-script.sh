@@ -85,7 +85,8 @@ create_vars_for_machine() {
 
   if [[ -v GITLAB_CI ]]; then
     DOWNLOAD_URL="$(jq .download_url build.json | tr -d \")"
-    ARCH_ARTIFACTS="${DOWNLOAD_URL}"
+    # The URL ends with /, so remove the last one
+    ARCH_ARTIFACTS="$(echo ${DOWNLOAD_URL} | cut -d/ -f1-4)"
     BUILD_URL="${CI_PIPELINE_URL}"
     KERNEL_DEFCONFIG_URL="${DOWNLOAD_URL}/kernel.conf"
     BUILD_NUMBER="${CI_BUILD_ID}"
