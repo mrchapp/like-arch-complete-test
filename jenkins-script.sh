@@ -98,6 +98,17 @@ create_vars_for_machine() {
     ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     KERNEL_DEFCONFIG_URL="http://${S3_BUCKET}/${PUB_DEST}/${BUILD_NUMBER}/defconfig"
     BASE_URL=http://${S3_BUCKET}/
+    case "${ARCH}" in
+      arm)
+        ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/multi_v7_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+        ;;
+      i386)
+        ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/i386_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+        ;;
+      x86)
+        ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/x86_64_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+        ;;
+    esac
   fi
 
   case "${MACHINE}" in
@@ -143,7 +154,6 @@ create_vars_for_machine() {
     KERNEL_NAME=zImage
     DTB_FILENAME=dtbs/am57xx-beagle-x15.dtb
     ROOTFS_FILENAME=rpb-console-image-lkft-am57xx-evm-20190923201632.rootfs.ext4.gz
-    ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/multi_v7_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
     BOOT_URL=${KERNEL_URL}
     BOOT_OS_PROMPT='root@am57xx-evm:'
@@ -154,7 +164,6 @@ create_vars_for_machine() {
     DEVICE_TYPE=x86
     KERNEL_NAME=bzImage
     ROOTFS_FILENAME=rpb-console-image-lkft-intel-corei7-64-20190923201627.rootfs.tar.xz
-    ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/x86_64_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     BOOT_OS_PROMPT='root@intel-corei7-64:'
     ;;
   intel-core2-32)
@@ -162,7 +171,6 @@ create_vars_for_machine() {
     DEVICE_TYPE=i386
     KERNEL_NAME=bzImage
     ROOTFS_FILENAME=rpb-console-image-lkft-intel-core2-32-20190923201631.rootfs.tar.xz
-    ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/i386_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
     BOOT_URL=${KERNEL_URL}
     BOOT_OS_PROMPT='root@intel-core2-32:'
