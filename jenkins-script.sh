@@ -6,6 +6,7 @@ set -u
 
 env
 echo
+[ ! -v GIT_DESCRIBE ] && [ -v LATEST_SHA ] && GIT_DESCRIBE="${LATEST_SHA:0:12}"
 echo "git describe: [$GIT_DESCRIBE]"
 
 if [[ -v HUDSON_COOKIE ]] || [[ -v CI ]]; then
