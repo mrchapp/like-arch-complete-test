@@ -42,12 +42,11 @@ generate_submit_tests() {
     ${DRY_RUN} \
     --variables "${WORKDIR}/variables.ini" \
     --device-type "${DEVICE_TYPE}" \
-    --build-number "${BUILD_NUMBER}" \
+    --build-number "${GIT_DESCRIBE}" \
     --lava-server "${LAVA_SERVER}" \
     --qa-server https://qa-reports.linaro.org \
     --qa-server-team staging-lkft \
     --qa-server-project linux-mainline-oe \
-    --git-commit "${GIT_DESCRIBE}" \
     --test-plan lkft-sanity
   set +x
 }
