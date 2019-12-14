@@ -10,7 +10,8 @@ echo
 echo "git describe: [$GIT_DESCRIBE]"
 
 if [[ -v HUDSON_COOKIE ]] || [[ -v CI ]]; then
-  sudo pip3 install jinja2-cli ruamel.yaml
+  SUDO=$(which sudo ||:)
+  ${SUDO} pip3 install jinja2-cli ruamel.yaml
   DRY_RUN=""
 else
   DRY_RUN="--dry-run"
