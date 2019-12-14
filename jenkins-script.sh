@@ -68,20 +68,30 @@ create_vars_for_machine() {
   unset BOOT_IMG_FILENAME
 
   LAVA_SERVER=https://lkft.validation.linaro.org/RPC2/
-  S3_BUCKET="storage.staging.lkft.org"
-  PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
   ROOTFS_BUCKET="storage.staging.lkft.org"
   ROOTFS_RELEASE_PUB_DEST="rootfs/oe-lkft-sumo"
   ROOTFS_BUILDNR_PUB_DEST="62"
   ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/${MACHINE}/${ROOTFS_BUILDNR_PUB_DEST}"
   GCC_VER_PUB_DEST="gcc-8"
-  ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/${GCC_VER_PUB_DEST}"
   KERNEL_NAME=Image
   DTB_FILENAME=
   BOOT_URL=
   TAGS=
   BOOT_LABEL=
   ROOTFS_URL=
+
+  if [[ -v GITLAB_CI ]]; then
+    DOWNLOAD_URL="$(jq .download_url build.json | tr -d \")"
+    ARCH_ARTIFACTS="${DOWNLOAD_URL}"
+    BUILD_URL="${CI_PIPELINE_URL}"
+    KERNEL_DEFCONFIG_URL="${DOWNLOAD_URL}/kernel.conf"
+    BUILD_NUMBER="${CI_BUILD_ID}"
+  else
+    S3_BUCKET="storage.staging.lkft.org"
+    PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
+    ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+    KERNEL_DEFCONFIG_URL="http://${S3_BUCKET}/${PUB_DEST}/${BUILD_NUMBER}/defconfig"
+  fi
 
   case "${MACHINE}" in
   dragonboard-410c)
@@ -158,10 +168,8 @@ create_vars_for_machine() {
 
   cat <<EOF >"${WORKDIR}/variables.ini"
 DEVICE_TYPE=${DEVICE_TYPE}
-BASE_URL=http://${S3_BUCKET}/
-PUB_DEST=${PUB_DEST}
 BUILD_NUMBER=${BUILD_NUMBER}
-BUILD_URL=http://ci.staging.lkft.org/job/kernel-arch-complete/${BUILD_NUMBER}/
+BUILD_URL=${BUILD_URL}
 KERNEL_URL=${KERNEL_URL}
 MODULES_URL=${MODULES_URL}
 KERNEL_CONFIG_URL=${ARCH_ARTIFACTS}/kernel.config
@@ -173,7 +181,7 @@ MAKE_KERNELVERSION=5.4-rc8
 KERNEL_VERSION=mainline
 KERNEL_BRANCH=mainline
 KERNEL_REPO=https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-KERNEL_DEFCONFIG_URL=http://${S3_BUCKET}/${PUB_DEST}/${BUILD_NUMBER}/defconfig
+KERNEL_DEFCONFIG_URL=${KERNEL_DEFCONFIG_URL}
 # juno/ls2088a:
 ROOTFS_URL=${ROOTFS_URL}
 # hikey:
