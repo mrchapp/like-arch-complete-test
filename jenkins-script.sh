@@ -13,7 +13,7 @@ if [[ -v HUDSON_COOKIE ]] || [[ -v CI ]]; then
   SUDO=$(which sudo ||:)
   ${SUDO} pip3 install jinja2-cli requests ruamel.yaml
   ${SUDO} apt update
-  ${SUDO} DEBIAN_FRONTEND=noninteractive apt install -yqq --no-install-recommends jq
+  ${SUDO} apt install -yqq --no-install-recommends jq
   DRY_RUN=""
 else
   DRY_RUN="--dry-run"
