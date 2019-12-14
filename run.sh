@@ -11,9 +11,4 @@ else
   exit 1
 fi
 
-if [ ! -v WORKSPACE ]; then
-  echo "WORKSPACE is undefined. Please set an empty WORKSPACE directory."
-  exit 1
-fi
-mkdir -p "${WORKSPACE}"
 "${ROOT_DIR}/jenkins-script.sh"

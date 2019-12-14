@@ -22,6 +22,7 @@ if [[ -v HUDSON_COOKIE ]] || [[ -v CI ]]; then
 else
   WORKDIR="$(dirname "$(readlink -e "$0")")/workspace"
 fi
+mkdir -p "${WORKDIR}"
 
 if [ ! -d "${WORKDIR}/lava-test-plans" ]; then
   git clone -o origin https://github.com/linaro/lava-test-plans "${WORKDIR}/lava-test-plans"
