@@ -105,7 +105,7 @@ create_vars_for_machine() {
       i386)
         ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/i386_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
         ;;
-      x86)
+      x86_64)
         ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/x86_64_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
         ;;
     esac
