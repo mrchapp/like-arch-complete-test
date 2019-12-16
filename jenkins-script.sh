@@ -231,7 +231,7 @@ if [ -v board ]; then
   case "${board}" in
     db410c) MACHINE="dragonboard-410c" ;;
     i386)   MACHINE="intel-core2-32" ;;
-    x15)    MACHINE="am57xx-emv" ;;
+    x15)    MACHINE="am57xx-evm" ;;
     x86_64) MACHINE="intel-corei7-64" ;;
   esac
 
