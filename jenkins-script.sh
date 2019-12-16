@@ -71,7 +71,7 @@ create_vars_for_machine() {
   unset BOOT_IMG_FILENAME
 
   LAVA_SERVER=https://lkft.validation.linaro.org/RPC2/
-  ROOTFS_BUCKET="storage.staging.lkft.org"
+  BASE_URL="http://storage.staging.lkft.org"
   ROOTFS_RELEASE_PUB_DEST="rootfs/oe-lkft-sumo"
   ROOTFS_BUILDNR_PUB_DEST="62"
   ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/${MACHINE}/${ROOTFS_BUILDNR_PUB_DEST}"
@@ -107,22 +107,20 @@ create_vars_for_machine() {
         ;;
     esac
   else
-    S3_BUCKET="storage.staging.lkft.org"
     PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
-    KERNEL_DEFCONFIG_URL="http://${S3_BUCKET}/${PUB_DEST}/${BUILD_NUMBER}/defconfig"
-    BASE_URL=http://${S3_BUCKET}
+    KERNEL_DEFCONFIG_URL="${BASE_URL}/${PUB_DEST}/${BUILD_NUMBER}/defconfig"
 
     # default ARCH_ARTIFACTS to arm64
     ARCH_ARTIFACTS="${BASE_URL}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     case "${ARCH}" in
       arm)
-        ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/multi_v7_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+        ARCH_ARTIFACTS="${BASE_URL}/${PUB_DEST}/${ARCH}/multi_v7_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
         ;;
       i386)
-        ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/i386_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+        ARCH_ARTIFACTS="${BASE_URL}/${PUB_DEST}/${ARCH}/i386_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
         ;;
       x86_64)
-        ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/x86_64_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+        ARCH_ARTIFACTS="${BASE_URL}/${PUB_DEST}/${ARCH}/x86_64_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
         ;;
     esac
   fi
@@ -134,7 +132,7 @@ create_vars_for_machine() {
     DTB_FILENAME=dtbs/qcom/apq8016-sbc.dtb
     BOOT_IMG_FILENAME=boot--5.2+git0+0ecfebd2b5-r0-dragonboard-410c-20190910203807.img
     ROOTFS_FILENAME=rpb-console-image-lkft-dragonboard-410c-20190923201628.rootfs.ext4.gz
-    BOOT_URL=http://${ROOTFS_BUCKET}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
+    BOOT_URL=${BASE_URL}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
     TAGS="[old-firmware]"
     BOOT_OS_PROMPT='dragonboard-410c:'
     ;;
@@ -144,7 +142,7 @@ create_vars_for_machine() {
     DTB_FILENAME=dtbs/hisilicon/hi6220-hikey.dtb
     BOOT_IMG_FILENAME=boot-0.0+AUTOINC+2d8c108bf0-ed8112606c-r0-hikey-20190911025241.uefi.img
     ROOTFS_FILENAME=rpb-console-image-lkft-hikey-20190923201702.rootfs.ext4.gz
-    BOOT_URL=http://${ROOTFS_BUCKET}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
+    BOOT_URL=${BASE_URL}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
     BOOT_OS_PROMPT='hikey:~'
     ;;
   juno)
@@ -198,7 +196,8 @@ create_vars_for_machine() {
 
   KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
   MODULES_URL=${ARCH_ARTIFACTS}/modules.tar.xz
-  [[ -z ${ROOTFS_URL} ]] && ROOTFS_URL=http://${ROOTFS_BUCKET}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
+
+  [[ -z ${ROOTFS_URL} ]] && ROOTFS_URL=${BASE_URL}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
 
   cat <<EOF >"${WORKDIR}/variables.ini"
 DEVICE_TYPE=${DEVICE_TYPE}
