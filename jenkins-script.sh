@@ -109,9 +109,11 @@ create_vars_for_machine() {
   else
     S3_BUCKET="storage.staging.lkft.org"
     PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
-    ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     KERNEL_DEFCONFIG_URL="http://${S3_BUCKET}/${PUB_DEST}/${BUILD_NUMBER}/defconfig"
-    BASE_URL=http://${S3_BUCKET}/
+    BASE_URL=http://${S3_BUCKET}
+
+    # default ARCH_ARTIFACTS to arm64
+    ARCH_ARTIFACTS="${BASE_URL}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     case "${ARCH}" in
       arm)
         ARCH_ARTIFACTS="http://${S3_BUCKET}/${PUB_DEST}/${ARCH}/multi_v7_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
