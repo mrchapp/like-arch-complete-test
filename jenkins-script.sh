@@ -49,7 +49,7 @@ generate_submit_tests() {
     --lava-server "${LAVA_SERVER}" \
     --qa-server https://qa-reports.linaro.org \
     --qa-server-team staging-lkft \
-    --qa-server-project linux-mainline-oe \
+    --qa-server-project "${QA_PROJECT}" \
     --test-plan lkft-sanity
   set +x
 }
@@ -77,6 +77,7 @@ create_vars_for_machine() {
   ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/${MACHINE}/${ROOTFS_BUILDNR_PUB_DEST}"
   GCC_VER_PUB_DEST="gcc-8"
   KERNEL_NAME=Image
+  QA_PROJECT="linux-mainline-oe"
   DTB_FILENAME=
   BOOT_URL=
   TAGS=
@@ -92,6 +93,18 @@ create_vars_for_machine() {
     BUILD_NUMBER="${CI_BUILD_ID}"
     BASE_URL=$(echo "${DOWNLOAD_URL}" | cut -d/ -f1-3)
     PUB_DEST=$(echo "${DOWNLOAD_URL}" | cut -d/ -f4-)
+    case "${REPO_NAME}" in
+      mainline)
+        QA_PROJECT="linux-mainline-oe"
+        ;;
+      next)
+        QA_PROJECT="linux-next-oe"
+        ;;
+      stable-rc)
+        major_version=$(echo ${GIT_BRANCH#linux-*} | cut -d. -f1-2)
+        QA_PROJECT="linux-stable-rc-${major_version}-oe"
+        ;;
+    esac
   else
     S3_BUCKET="storage.staging.lkft.org"
     PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
