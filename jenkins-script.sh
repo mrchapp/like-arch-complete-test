@@ -10,7 +10,7 @@ echo
 echo "git describe: [$GIT_DESCRIBE]"
 
 if [[ -v HUDSON_COOKIE ]] || [[ -v CI ]]; then
-  SUDO=$(which sudo || :)
+  SUDO=$(command -v sudo || :)
   ${SUDO} pip3 install jinja2-cli requests ruamel.yaml
   ${SUDO} apt update
   ${SUDO} apt install -yqq --no-install-recommends jq
@@ -100,7 +100,7 @@ create_vars_for_machine() {
   if [[ -v GITLAB_CI ]]; then
     DOWNLOAD_URL="$(jq .download_url build.json | tr -d \")"
     # The URL ends with /, so remove the last one
-    ARCH_ARTIFACTS="$(echo ${DOWNLOAD_URL} | cut -d/ -f1-4)"
+    ARCH_ARTIFACTS="$(echo "${DOWNLOAD_URL}" | cut -d/ -f1-4)"
     BUILD_URL="${CI_PIPELINE_URL}"
     KERNEL_DEFCONFIG_URL="${DOWNLOAD_URL}/kernel.conf"
     BUILD_NUMBER="${CI_BUILD_ID}"
@@ -114,7 +114,7 @@ create_vars_for_machine() {
         QA_PROJECT="linux-next-oe"
         ;;
       stable-rc)
-        major_version=$(echo ${GIT_BRANCH#linux-*} | cut -d. -f1-2)
+        major_version=$(echo "${GIT_BRANCH#linux-*}" | cut -d. -f1-2)
         QA_PROJECT="linux-stable-rc-${major_version}-oe"
         ;;
     esac
