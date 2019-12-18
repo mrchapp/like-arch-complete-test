@@ -161,6 +161,7 @@ create_vars_for_machine() {
     #LAVA_SERVER=http://59.144.98.45/RPC2/
     LAVA_SERVER=nxp
     BOOT_OS_PROMPT=''
+    LKFT_TEST_PLAN="lkft-full"
     ;;
   am57xx-evm)
     # am57xx-evm
