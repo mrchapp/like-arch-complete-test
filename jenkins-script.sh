@@ -309,6 +309,14 @@ if [ -v board ]; then
     i386) MACHINE="intel-core2-32" ;;
     x15) MACHINE="am57xx-evm" ;;
     x86_64) MACHINE="intel-corei7-64" ;;
+    qemu)
+      case "${ARCH}" in
+        arm) MACHINE="qemu_arm" ;;
+        arm64) MACHINE="qemu_arm64" ;;
+        i386) MACHINE="qemu_i386" ;;
+        x86) MACHINE="qemu_x86_64" ;;
+      esac
+      ;;
   esac
 
   create_vars_for_machine "${MACHINE}"
