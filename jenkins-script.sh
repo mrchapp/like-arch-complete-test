@@ -10,7 +10,7 @@ echo
 echo "git describe: [$GIT_DESCRIBE]"
 
 if [[ -v HUDSON_COOKIE ]] || [[ -v CI ]]; then
-  SUDO=$(which sudo ||:)
+  SUDO=$(which sudo || :)
   ${SUDO} pip3 install jinja2-cli requests ruamel.yaml
   ${SUDO} apt update
   ${SUDO} apt install -yqq --no-install-recommends jq
@@ -76,11 +76,11 @@ create_vars_for_machine() {
   ROOTFS_BUILDNR_PUB_DEST="74"
 
   case "${MACHINE}" in
-  qemu_arm) MACHINE_PUB_DEST=am57xx-evm  ;;
-  qemu_arm64) MACHINE_PUB_DEST=juno  ;;
-  qemu_x86_64) MACHINE_PUB_DEST=intel-corei7-64  ;;
-  qemu_i386) MACHINE_PUB_DEST=intel-core2-32  ;;
-  *) MACHINE_PUB_DEST=${MACHINE} ;;
+    qemu_arm) MACHINE_PUB_DEST=am57xx-evm ;;
+    qemu_arm64) MACHINE_PUB_DEST=juno ;;
+    qemu_x86_64) MACHINE_PUB_DEST=intel-corei7-64 ;;
+    qemu_i386) MACHINE_PUB_DEST=intel-core2-32 ;;
+    *) MACHINE_PUB_DEST=${MACHINE} ;;
   esac
 
   ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/${MACHINE_PUB_DEST}/${ROOTFS_BUILDNR_PUB_DEST}"
@@ -138,109 +138,109 @@ create_vars_for_machine() {
   fi
 
   case "${MACHINE}" in
-  dragonboard-410c)
-    # Qualcomm's Dragonboard 410c
-    DEVICE_TYPE=dragonboard-410c
-    DTB_FILENAME=dtbs/qcom/apq8016-sbc.dtb
-    BOOT_IMG_FILENAME=boot--5.4+git0+219d54332a-r0-dragonboard-410c-20191216215555.img
-    ROOTFS_FILENAME=rpb-console-image-lkft-dragonboard-410c-20191216215555.rootfs.ext4.gz
-    BOOT_URL=${BASE_URL}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
-    TAGS="[old-firmware]"
-    BOOT_OS_PROMPT='dragonboard-410c:'
-    DEPLOY_TARGET="download"
-    ;;
-  hikey)
-    # HiKey
-    DEVICE_TYPE=hi6220-hikey
-    DTB_FILENAME=dtbs/hisilicon/hi6220-hikey.dtb
-    BOOT_IMG_FILENAME=boot-0.0+AUTOINC+2d8c108bf0-ed8112606c-r0-hikey-20190911025241.uefi.img
-    ROOTFS_FILENAME=rpb-console-image-lkft-hikey-20191216215523.rootfs.ext4.gz
-    BOOT_URL=${BASE_URL}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
-    BOOT_OS_PROMPT='hikey:~'
-    DEPLOY_TARGET="download"
-    ;;
-  juno|qemu_arm64)
-    # Arm's Juno
-    DEVICE_TYPE=juno-r2
-    DTB_FILENAME=dtbs/arm/juno-r2.dtb
-    ROOTFS_FILENAME=rpb-console-image-lkft-juno-20191216215525.rootfs.tar.xz
-    BOOT_OS_PROMPT=
-    MODULES_URL_COMP="xz"
-    ROOTFS_URL_COMP="xz"
-    if [[ "${MACHINE}" == "qemu_arm64" ]]; then
-      DEVICE_TYPE=qemu_arm64
-      DTB_FILENAME=
-      DEPLOY_TARGET="tmpfs"
-      ROOTFS_FILENAME=rpb-console-image-lkft-juno-20191216215525.rootfs.ext4.gz
-      ROOTFS_URL_COMP="gz"
+    dragonboard-410c)
+      # Qualcomm's Dragonboard 410c
+      DEVICE_TYPE=dragonboard-410c
+      DTB_FILENAME=dtbs/qcom/apq8016-sbc.dtb
+      BOOT_IMG_FILENAME=boot--5.4+git0+219d54332a-r0-dragonboard-410c-20191216215555.img
+      ROOTFS_FILENAME=rpb-console-image-lkft-dragonboard-410c-20191216215555.rootfs.ext4.gz
+      BOOT_URL=${BASE_URL}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
+      TAGS="[old-firmware]"
+      BOOT_OS_PROMPT='dragonboard-410c:'
+      DEPLOY_TARGET="download"
+      ;;
+    hikey)
+      # HiKey
+      DEVICE_TYPE=hi6220-hikey
+      DTB_FILENAME=dtbs/hisilicon/hi6220-hikey.dtb
+      BOOT_IMG_FILENAME=boot-0.0+AUTOINC+2d8c108bf0-ed8112606c-r0-hikey-20190911025241.uefi.img
+      ROOTFS_FILENAME=rpb-console-image-lkft-hikey-20191216215523.rootfs.ext4.gz
+      BOOT_URL=${BASE_URL}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
+      BOOT_OS_PROMPT='hikey:~'
+      DEPLOY_TARGET="download"
+      ;;
+    juno | qemu_arm64)
+      # Arm's Juno
+      DEVICE_TYPE=juno-r2
+      DTB_FILENAME=dtbs/arm/juno-r2.dtb
+      ROOTFS_FILENAME=rpb-console-image-lkft-juno-20191216215525.rootfs.tar.xz
+      BOOT_OS_PROMPT=
+      MODULES_URL_COMP="xz"
+      ROOTFS_URL_COMP="xz"
+      if [[ "${MACHINE}" == "qemu_arm64" ]]; then
+        DEVICE_TYPE=qemu_arm64
+        DTB_FILENAME=
+        DEPLOY_TARGET="tmpfs"
+        ROOTFS_FILENAME=rpb-console-image-lkft-juno-20191216215525.rootfs.ext4.gz
+        ROOTFS_URL_COMP="gz"
+        KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
+        BOOT_URL=${KERNEL_URL}
+      fi
+      ;;
+    ls2088a)
+      # NXP's LS2088A RDB
+      DEVICE_TYPE=nxp-ls2088
+      DTB_FILENAME=dtbs/freescale/fsl-ls2088a-rdb.dtb
+      ROOTFS_FILENAME=rpb-console-image-lkft-ls2088ardb-20191019001216.rootfs.tar.xz
+      ROOTFS_URL=http://people.linaro.org/~daniel.diaz/lkft-nxp/images/${ROOTFS_FILENAME}
+      #LAVA_SERVER=http://59.144.98.45/RPC2/
+      LAVA_SERVER=nxp
+      BOOT_OS_PROMPT=
+      LKFT_TEST_PLAN="lkft-full"
+      ;;
+    am57xx-evm | qemu_arm)
+      # am57xx-evm
+      DEVICE_TYPE=x15
+      KERNEL_NAME=zImage
+      DTB_FILENAME=dtbs/am57xx-beagle-x15.dtb
+      ROOTFS_FILENAME=rpb-console-image-lkft-am57xx-evm-20191216215806.rootfs.ext4.gz
       KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
       BOOT_URL=${KERNEL_URL}
-    fi
-    ;;
-  ls2088a)
-    # NXP's LS2088A RDB
-    DEVICE_TYPE=nxp-ls2088
-    DTB_FILENAME=dtbs/freescale/fsl-ls2088a-rdb.dtb
-    ROOTFS_FILENAME=rpb-console-image-lkft-ls2088ardb-20191019001216.rootfs.tar.xz
-    ROOTFS_URL=http://people.linaro.org/~daniel.diaz/lkft-nxp/images/${ROOTFS_FILENAME}
-    #LAVA_SERVER=http://59.144.98.45/RPC2/
-    LAVA_SERVER=nxp
-    BOOT_OS_PROMPT=
-    LKFT_TEST_PLAN="lkft-full"
-    ;;
-  am57xx-evm|qemu_arm)
-    # am57xx-evm
-    DEVICE_TYPE=x15
-    KERNEL_NAME=zImage
-    DTB_FILENAME=dtbs/am57xx-beagle-x15.dtb
-    ROOTFS_FILENAME=rpb-console-image-lkft-am57xx-evm-20191216215806.rootfs.ext4.gz
-    KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
-    BOOT_URL=${KERNEL_URL}
-    BOOT_OS_PROMPT='root@am57xx-evm:'
-    BOOT_LABEL="kernel"
-    DEPLOY_TARGET="download"
-    if [[ "${MACHINE}" == "qemu_arm" ]]; then
-      DEVICE_TYPE=qemu_arm
-      DTB_FILENAME=
-      DEPLOY_TARGET="tmpfs"
+      BOOT_OS_PROMPT='root@am57xx-evm:'
+      BOOT_LABEL="kernel"
+      DEPLOY_TARGET="download"
+      if [[ "${MACHINE}" == "qemu_arm" ]]; then
+        DEVICE_TYPE=qemu_arm
+        DTB_FILENAME=
+        DEPLOY_TARGET="tmpfs"
+        MODULES_URL_COMP="xz"
+        ROOTFS_URL_COMP="gz"
+      fi
+      ;;
+    intel-corei7-64 | qemu_x86_64)
+      # intel-corei7-64
+      DEVICE_TYPE=x86
+      KERNEL_NAME=bzImage
+      ROOTFS_FILENAME=rpb-console-image-lkft-intel-corei7-64-20191216215547.rootfs.tar.xz
+      KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
+      BOOT_URL=${KERNEL_URL}
+      BOOT_OS_PROMPT='root@intel-corei7-64:'
       MODULES_URL_COMP="xz"
-      ROOTFS_URL_COMP="gz"
-    fi
-    ;;
-  intel-corei7-64|qemu_x86_64)
-    # intel-corei7-64
-    DEVICE_TYPE=x86
-    KERNEL_NAME=bzImage
-    ROOTFS_FILENAME=rpb-console-image-lkft-intel-corei7-64-20191216215547.rootfs.tar.xz
-    KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
-    BOOT_URL=${KERNEL_URL}
-    BOOT_OS_PROMPT='root@intel-corei7-64:'
-    MODULES_URL_COMP="xz"
-    ROOTFS_URL_COMP="xz"
-    if [[ "${MACHINE}" == "qemu_x86_64" ]]; then
-      DEVICE_TYPE=qemu_x86_64
-      DEPLOY_TARGET="tmpfs"
-      ROOTFS_FILENAME=rpb-console-image-lkft-intel-corei7-64-20191216215547.rootfs.ext4.gz
-      ROOTFS_URL_COMP="gz"
-    fi
-    ;;
-  intel-core2-32|qemu_i386)
-    # intel-core2-32
-    DEVICE_TYPE=i386
-    KERNEL_NAME=bzImage
-    ROOTFS_FILENAME=rpb-console-image-lkft-intel-core2-32-20191216215604.rootfs.tar.xz
-    KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
-    BOOT_URL=${KERNEL_URL}
-    BOOT_OS_PROMPT='root@intel-core2-32:'
-    MODULES_URL_COMP="xz"
-    ROOTFS_URL_COMP="xz"
-    if [[ "${MACHINE}" == "qemu_i386" ]]; then
-      DEVICE_TYPE=qemu_i386
-      DEPLOY_TARGET="tmpfs"
-      ROOTFS_FILENAME=rpb-console-image-lkft-intel-core2-32-20191216215604.rootfs.ext4.gz
-      ROOTFS_URL_COMP="gz"
-    fi
-    ;;
+      ROOTFS_URL_COMP="xz"
+      if [[ "${MACHINE}" == "qemu_x86_64" ]]; then
+        DEVICE_TYPE=qemu_x86_64
+        DEPLOY_TARGET="tmpfs"
+        ROOTFS_FILENAME=rpb-console-image-lkft-intel-corei7-64-20191216215547.rootfs.ext4.gz
+        ROOTFS_URL_COMP="gz"
+      fi
+      ;;
+    intel-core2-32 | qemu_i386)
+      # intel-core2-32
+      DEVICE_TYPE=i386
+      KERNEL_NAME=bzImage
+      ROOTFS_FILENAME=rpb-console-image-lkft-intel-core2-32-20191216215604.rootfs.tar.xz
+      KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
+      BOOT_URL=${KERNEL_URL}
+      BOOT_OS_PROMPT='root@intel-core2-32:'
+      MODULES_URL_COMP="xz"
+      ROOTFS_URL_COMP="xz"
+      if [[ "${MACHINE}" == "qemu_i386" ]]; then
+        DEVICE_TYPE=qemu_i386
+        DEPLOY_TARGET="tmpfs"
+        ROOTFS_FILENAME=rpb-console-image-lkft-intel-core2-32-20191216215604.rootfs.ext4.gz
+        ROOTFS_URL_COMP="gz"
+      fi
+      ;;
   esac
 
   KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
@@ -306,8 +306,8 @@ if [ -v board ]; then
   MACHINE="${board}"
   case "${board}" in
     db410c) MACHINE="dragonboard-410c" ;;
-    i386)   MACHINE="intel-core2-32" ;;
-    x15)    MACHINE="am57xx-evm" ;;
+    i386) MACHINE="intel-core2-32" ;;
+    x15) MACHINE="am57xx-evm" ;;
     x86_64) MACHINE="intel-corei7-64" ;;
   esac
 
