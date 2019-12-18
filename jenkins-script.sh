@@ -164,7 +164,7 @@ create_vars_for_machine() {
     DEVICE_TYPE=juno-r2
     DTB_FILENAME=dtbs/arm/juno-r2.dtb
     ROOTFS_FILENAME=rpb-console-image-lkft-juno-20191216215525.rootfs.tar.xz
-    BOOT_OS_PROMPT=''
+    BOOT_OS_PROMPT=
     MODULES_URL_COMP="xz"
     ROOTFS_URL_COMP="xz"
     if [[ "${MACHINE}" == "qemu_arm64" ]]; then
@@ -185,7 +185,7 @@ create_vars_for_machine() {
     ROOTFS_URL=http://people.linaro.org/~daniel.diaz/lkft-nxp/images/${ROOTFS_FILENAME}
     #LAVA_SERVER=http://59.144.98.45/RPC2/
     LAVA_SERVER=nxp
-    BOOT_OS_PROMPT=''
+    BOOT_OS_PROMPT=
     LKFT_TEST_PLAN="lkft-full"
     ;;
   am57xx-evm|qemu_arm)
