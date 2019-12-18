@@ -50,7 +50,7 @@ generate_submit_tests() {
     --qa-server https://qa-reports.linaro.org \
     --qa-server-team staging-lkft \
     --qa-server-project "${QA_PROJECT}" \
-    --test-plan lkft-sanity
+    --test-plan "${LKFT_TEST_PLAN}"
   set +x
 }
 
@@ -78,6 +78,7 @@ create_vars_for_machine() {
   GCC_VER_PUB_DEST="gcc-8"
   KERNEL_NAME=Image
   QA_PROJECT="linux-mainline-oe"
+  LKFT_TEST_PLAN="lkft-sanity"
   DTB_FILENAME=
   BOOT_URL=
   TAGS=
