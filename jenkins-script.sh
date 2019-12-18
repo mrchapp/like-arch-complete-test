@@ -73,7 +73,7 @@ create_vars_for_machine() {
   LAVA_SERVER=https://lkft.validation.linaro.org/RPC2/
   BASE_URL="http://storage.staging.lkft.org"
   ROOTFS_RELEASE_PUB_DEST="rootfs/oe-lkft-sumo"
-  ROOTFS_BUILDNR_PUB_DEST="62"
+  ROOTFS_BUILDNR_PUB_DEST="74"
   ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/${MACHINE}/${ROOTFS_BUILDNR_PUB_DEST}"
   GCC_VER_PUB_DEST="gcc-8"
   KERNEL_NAME=Image
@@ -132,8 +132,8 @@ create_vars_for_machine() {
     # Qualcomm's Dragonboard 410c
     DEVICE_TYPE=dragonboard-410c
     DTB_FILENAME=dtbs/qcom/apq8016-sbc.dtb
-    BOOT_IMG_FILENAME=boot--5.2+git0+0ecfebd2b5-r0-dragonboard-410c-20190910203807.img
-    ROOTFS_FILENAME=rpb-console-image-lkft-dragonboard-410c-20190923201628.rootfs.ext4.gz
+    BOOT_IMG_FILENAME=boot--5.4+git0+219d54332a-r0-dragonboard-410c-20191216215555.img
+    ROOTFS_FILENAME=rpb-console-image-lkft-dragonboard-410c-20191216215555.rootfs.ext4.gz
     BOOT_URL=${BASE_URL}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
     TAGS="[old-firmware]"
     BOOT_OS_PROMPT='dragonboard-410c:'
@@ -143,7 +143,7 @@ create_vars_for_machine() {
     DEVICE_TYPE=hi6220-hikey
     DTB_FILENAME=dtbs/hisilicon/hi6220-hikey.dtb
     BOOT_IMG_FILENAME=boot-0.0+AUTOINC+2d8c108bf0-ed8112606c-r0-hikey-20190911025241.uefi.img
-    ROOTFS_FILENAME=rpb-console-image-lkft-hikey-20190923201702.rootfs.ext4.gz
+    ROOTFS_FILENAME=rpb-console-image-lkft-hikey-20191216215523.rootfs.ext4.gz
     BOOT_URL=${BASE_URL}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
     BOOT_OS_PROMPT='hikey:~'
     ;;
@@ -151,7 +151,7 @@ create_vars_for_machine() {
     # Arm's Juno
     DEVICE_TYPE=juno-r2
     DTB_FILENAME=dtbs/arm/juno-r2.dtb
-    ROOTFS_FILENAME=rpb-console-image-lkft-juno-20190923201430.rootfs.tar.xz
+    ROOTFS_FILENAME=rpb-console-image-lkft-juno-20191216215525.rootfs.tar.xz
     BOOT_OS_PROMPT=''
     MODULES_URL_COMP="xz"
     ROOTFS_URL_COMP="xz"
@@ -172,7 +172,7 @@ create_vars_for_machine() {
     DEVICE_TYPE=x15
     KERNEL_NAME=zImage
     DTB_FILENAME=dtbs/am57xx-beagle-x15.dtb
-    ROOTFS_FILENAME=rpb-console-image-lkft-am57xx-evm-20190923201632.rootfs.ext4.gz
+    ROOTFS_FILENAME=rpb-console-image-lkft-am57xx-evm-20191216215806.rootfs.ext4.gz
     KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
     BOOT_URL=${KERNEL_URL}
     BOOT_OS_PROMPT='root@am57xx-evm:'
@@ -182,7 +182,7 @@ create_vars_for_machine() {
     # intel-corei7-64
     DEVICE_TYPE=x86
     KERNEL_NAME=bzImage
-    ROOTFS_FILENAME=rpb-console-image-lkft-intel-corei7-64-20190923201627.rootfs.tar.xz
+    ROOTFS_FILENAME=rpb-console-image-lkft-intel-corei7-64-20191216215547.rootfs.tar.xz
     KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
     BOOT_URL=${KERNEL_URL}
     BOOT_OS_PROMPT='root@intel-corei7-64:'
@@ -193,7 +193,7 @@ create_vars_for_machine() {
     # intel-core2-32
     DEVICE_TYPE=i386
     KERNEL_NAME=bzImage
-    ROOTFS_FILENAME=rpb-console-image-lkft-intel-core2-32-20190923201631.rootfs.tar.xz
+    ROOTFS_FILENAME=rpb-console-image-lkft-intel-core2-32-20191216215604.rootfs.tar.xz
     KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
     BOOT_URL=${KERNEL_URL}
     BOOT_OS_PROMPT='root@intel-core2-32:'
