@@ -283,6 +283,8 @@ LXC_BOOT_FILE=boot.img
 LXC_ROOTFS_FILE=rpb-console-image-lkft.rootfs.img
 PROJECT=lkft-
 DEPLOY_OS=oe
+# lower priority for now:
+LAVA_JOB_PRIORITY=35
 EOF
   [[ -n ${TAGS} ]] && echo "TAGS=${TAGS}" >>"${WORKDIR}/variables.ini"
   [[ -n ${BOOT_OS_PROMPT} ]] && echo "BOOT_OS_PROMPT=${BOOT_OS_PROMPT}" >>"${WORKDIR}/variables.ini"
