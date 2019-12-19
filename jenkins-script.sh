@@ -59,7 +59,7 @@ generate_submit_tests() {
 # This argument is required.
 #
 # This variables affect the produced variables.ini:
-#   ARCH_ARTIFACTS
+#   KERNEL_PUB_DEST
 
 create_vars_for_machine() {
   echo
@@ -102,9 +102,8 @@ create_vars_for_machine() {
   if [[ -v GITLAB_CI ]]; then
     DOWNLOAD_URL="$(jq .download_url build.json | tr -d \")"
     # The URL ends with /, so remove the last one
-    ARCH_ARTIFACTS="$(echo "${DOWNLOAD_URL}" | cut -d/ -f1-4)"
+    KERNEL_PUB_DEST="$(echo "${DOWNLOAD_URL}" | cut -d/ -f1-4)"
     BUILD_URL="${CI_PIPELINE_URL}"
-    KERNEL_DEFCONFIG_URL="${DOWNLOAD_URL}/kernel.conf"
     BUILD_NUMBER="${CI_BUILD_ID}"
     BASE_KERNEL_URL=$(echo "${DOWNLOAD_URL}" | cut -d/ -f1-3)
     PUB_DEST=$(echo "${DOWNLOAD_URL}" | cut -d/ -f4-)
@@ -122,19 +121,18 @@ create_vars_for_machine() {
     esac
   else
     PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
-    KERNEL_DEFCONFIG_URL="${BASE_KERNEL_URL}/${PUB_DEST}/${BUILD_NUMBER}/defconfig"
 
-    # default ARCH_ARTIFACTS to arm64
-    ARCH_ARTIFACTS="${BASE_KERNEL_URL}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+    # default KERNEL_PUB_DEST to arm64
+    KERNEL_PUB_DEST="${BASE_KERNEL_URL}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     case "${ARCH}" in
       arm)
-        ARCH_ARTIFACTS="${BASE_KERNEL_URL}/${PUB_DEST}/${ARCH}/multi_v7_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+        KERNEL_PUB_DEST="${BASE_KERNEL_URL}/${PUB_DEST}/${ARCH}/multi_v7_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
         ;;
       i386)
-        ARCH_ARTIFACTS="${BASE_KERNEL_URL}/${PUB_DEST}/${ARCH}/i386_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+        KERNEL_PUB_DEST="${BASE_KERNEL_URL}/${PUB_DEST}/${ARCH}/i386_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
         ;;
       x86_64)
-        ARCH_ARTIFACTS="${BASE_KERNEL_URL}/${PUB_DEST}/${ARCH}/x86_64_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+        KERNEL_PUB_DEST="${BASE_KERNEL_URL}/${PUB_DEST}/${ARCH}/x86_64_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
         ;;
     esac
   fi
@@ -175,7 +173,7 @@ create_vars_for_machine() {
         DEPLOY_TARGET="tmpfs"
         ROOTFS_FILENAME=rpb-console-image-lkft-juno-20191216215525.rootfs.ext4.gz
         ROOTFS_URL_COMP="gz"
-        KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
+        KERNEL_URL=${KERNEL_PUB_DEST}/${KERNEL_NAME}
         BOOT_URL=${KERNEL_URL}
       fi
       ;;
@@ -196,7 +194,7 @@ create_vars_for_machine() {
       KERNEL_NAME=zImage
       DTB_FILENAME=dtbs/am57xx-beagle-x15.dtb
       ROOTFS_FILENAME=rpb-console-image-lkft-am57xx-evm-20191216215806.rootfs.ext4.gz
-      KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
+      KERNEL_URL=${KERNEL_PUB_DEST}/${KERNEL_NAME}
       BOOT_URL=${KERNEL_URL}
       BOOT_OS_PROMPT='root@am57xx-evm:'
       BOOT_LABEL="kernel"
@@ -214,7 +212,7 @@ create_vars_for_machine() {
       DEVICE_TYPE=x86
       KERNEL_NAME=bzImage
       ROOTFS_FILENAME=rpb-console-image-lkft-intel-corei7-64-20191216215547.rootfs.tar.xz
-      KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
+      KERNEL_URL=${KERNEL_PUB_DEST}/${KERNEL_NAME}
       BOOT_URL=${KERNEL_URL}
       BOOT_OS_PROMPT='root@intel-corei7-64:'
       MODULES_URL_COMP="xz"
@@ -231,7 +229,7 @@ create_vars_for_machine() {
       DEVICE_TYPE=i386
       KERNEL_NAME=bzImage
       ROOTFS_FILENAME=rpb-console-image-lkft-intel-core2-32-20191216215604.rootfs.tar.xz
-      KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
+      KERNEL_URL=${KERNEL_PUB_DEST}/${KERNEL_NAME}
       BOOT_URL=${KERNEL_URL}
       BOOT_OS_PROMPT='root@intel-core2-32:'
       MODULES_URL_COMP="xz"
@@ -245,25 +243,24 @@ create_vars_for_machine() {
       ;;
   esac
 
-  KERNEL_URL=${ARCH_ARTIFACTS}/${KERNEL_NAME}
+  KERNEL_URL=${KERNEL_PUB_DEST}/${KERNEL_NAME}
 
   if [[ $DEVICE_TYPE == *"qemu_"* ]]; then
     MODULES_URL=
     MODULES_URL_COMP=
   else
-    MODULES_URL=${ARCH_ARTIFACTS}/modules.tar.xz
+    MODULES_URL=${KERNEL_PUB_DEST}/modules.tar.xz
   fi
 
   [[ -z ${ROOTFS_URL} ]] && ROOTFS_URL=${BASE_ROOTFS_URL}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
 
   cat <<EOF >"${WORKDIR}/variables.ini"
 DEVICE_TYPE=${DEVICE_TYPE}
-BASE_KERNEL_URL=${BASE_KERNEL_URL}
-PUB_DEST=${PUB_DEST}
+KERNEL_PUB_DEST=${KERNEL_PUB_DEST}
 BUILD_NUMBER=${BUILD_NUMBER}
 BUILD_URL=${BUILD_URL}
 KERNEL_URL=${KERNEL_URL}
-KERNEL_CONFIG_URL=${ARCH_ARTIFACTS}/kernel.config
+KERNEL_CONFIG_URL=${KERNEL_PUB_DEST}/kernel.config
 #
 KERNEL_DESCRIBE=${GIT_DESCRIBE}
 KERNEL_COMMIT=${GIT_DESCRIBE}
@@ -272,7 +269,6 @@ MAKE_KERNELVERSION=5.4-rc8
 KERNEL_VERSION=mainline
 KERNEL_BRANCH=mainline
 KERNEL_REPO=https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-KERNEL_DEFCONFIG_URL=${KERNEL_DEFCONFIG_URL}
 # juno/ls2088a:
 ROOTFS_URL=${ROOTFS_URL}
 # hikey:
@@ -291,7 +287,7 @@ EOF
   [[ -n ${TAGS} ]] && echo "TAGS=${TAGS}" >>"${WORKDIR}/variables.ini"
   [[ -n ${BOOT_OS_PROMPT} ]] && echo "BOOT_OS_PROMPT=${BOOT_OS_PROMPT}" >>"${WORKDIR}/variables.ini"
   [[ -n ${BOOT_LABEL} ]] && echo "BOOT_LABEL=${BOOT_LABEL}" >>"${WORKDIR}/variables.ini"
-  [[ -n ${DTB_FILENAME} ]] && echo "DTB_URL=${ARCH_ARTIFACTS}/${DTB_FILENAME}" >>"${WORKDIR}/variables.ini"
+  [[ -n ${DTB_FILENAME} ]] && echo "DTB_URL=${KERNEL_PUB_DEST}/${DTB_FILENAME}" >>"${WORKDIR}/variables.ini"
   [[ -n ${MODULES_URL} ]] && echo "MODULES_URL=${MODULES_URL}" >>"${WORKDIR}/variables.ini"
   [[ -n ${MODULES_URL_COMP} ]] && echo "MODULES_URL_COMP=${MODULES_URL_COMP}" >>"${WORKDIR}/variables.ini"
   [[ -n ${ROOTFS_URL_COMP} ]] && echo "ROOTFS_URL_COMP=${ROOTFS_URL_COMP}" >>"${WORKDIR}/variables.ini"
