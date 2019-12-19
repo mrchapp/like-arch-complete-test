@@ -71,7 +71,9 @@ create_vars_for_machine() {
   unset BOOT_IMG_FILENAME
 
   LAVA_SERVER=https://lkft.validation.linaro.org/RPC2/
-  BASE_URL="http://storage.staging.lkft.org"
+  # Kernel URL may not be the same as the rootfs URL
+  BASE_KERNEL_URL="http://storage.staging.lkft.org"
+  BASE_ROOTFS_URL="http://storage.staging.lkft.org"
   ROOTFS_RELEASE_PUB_DEST="rootfs/oe-lkft-sumo"
   ROOTFS_BUILDNR_PUB_DEST="74"
 
@@ -104,7 +106,7 @@ create_vars_for_machine() {
     BUILD_URL="${CI_PIPELINE_URL}"
     KERNEL_DEFCONFIG_URL="${DOWNLOAD_URL}/kernel.conf"
     BUILD_NUMBER="${CI_BUILD_ID}"
-    BASE_URL=$(echo "${DOWNLOAD_URL}" | cut -d/ -f1-3)
+    BASE_KERNEL_URL=$(echo "${DOWNLOAD_URL}" | cut -d/ -f1-3)
     PUB_DEST=$(echo "${DOWNLOAD_URL}" | cut -d/ -f4-)
     case "${REPO_NAME}" in
       mainline)
@@ -120,19 +122,19 @@ create_vars_for_machine() {
     esac
   else
     PUB_DEST="${TREE_NAME}/${BRANCH}/${GIT_DESCRIBE}"
-    KERNEL_DEFCONFIG_URL="${BASE_URL}/${PUB_DEST}/${BUILD_NUMBER}/defconfig"
+    KERNEL_DEFCONFIG_URL="${BASE_KERNEL_URL}/${PUB_DEST}/${BUILD_NUMBER}/defconfig"
 
     # default ARCH_ARTIFACTS to arm64
-    ARCH_ARTIFACTS="${BASE_URL}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+    ARCH_ARTIFACTS="${BASE_KERNEL_URL}/${PUB_DEST}/${ARCH}/defconfig%2Blkft/${GCC_VER_PUB_DEST}"
     case "${ARCH}" in
       arm)
-        ARCH_ARTIFACTS="${BASE_URL}/${PUB_DEST}/${ARCH}/multi_v7_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+        ARCH_ARTIFACTS="${BASE_KERNEL_URL}/${PUB_DEST}/${ARCH}/multi_v7_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
         ;;
       i386)
-        ARCH_ARTIFACTS="${BASE_URL}/${PUB_DEST}/${ARCH}/i386_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+        ARCH_ARTIFACTS="${BASE_KERNEL_URL}/${PUB_DEST}/${ARCH}/i386_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
         ;;
       x86_64)
-        ARCH_ARTIFACTS="${BASE_URL}/${PUB_DEST}/${ARCH}/x86_64_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
+        ARCH_ARTIFACTS="${BASE_KERNEL_URL}/${PUB_DEST}/${ARCH}/x86_64_defconfig%2Blkft/${GCC_VER_PUB_DEST}"
         ;;
     esac
   fi
@@ -144,7 +146,7 @@ create_vars_for_machine() {
       DTB_FILENAME=dtbs/qcom/apq8016-sbc.dtb
       BOOT_IMG_FILENAME=boot--5.4+git0+219d54332a-r0-dragonboard-410c-20191216215555.img
       ROOTFS_FILENAME=rpb-console-image-lkft-dragonboard-410c-20191216215555.rootfs.ext4.gz
-      BOOT_URL=${BASE_URL}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
+      BOOT_URL=${BASE_ROOTFS_URL}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
       TAGS="[old-firmware]"
       BOOT_OS_PROMPT='dragonboard-410c:'
       DEPLOY_TARGET="download"
@@ -155,7 +157,7 @@ create_vars_for_machine() {
       DTB_FILENAME=dtbs/hisilicon/hi6220-hikey.dtb
       BOOT_IMG_FILENAME=boot-0.0+AUTOINC+2d8c108bf0-ed8112606c-r0-hikey-20190911025241.uefi.img
       ROOTFS_FILENAME=rpb-console-image-lkft-hikey-20191216215523.rootfs.ext4.gz
-      BOOT_URL=${BASE_URL}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
+      BOOT_URL=${BASE_ROOTFS_URL}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
       BOOT_OS_PROMPT='hikey:~'
       DEPLOY_TARGET="download"
       ;;
@@ -252,11 +254,11 @@ create_vars_for_machine() {
     MODULES_URL=${ARCH_ARTIFACTS}/modules.tar.xz
   fi
 
-  [[ -z ${ROOTFS_URL} ]] && ROOTFS_URL=${BASE_URL}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
+  [[ -z ${ROOTFS_URL} ]] && ROOTFS_URL=${BASE_ROOTFS_URL}/${ROOTFS_PUB_DEST}/${ROOTFS_FILENAME}
 
   cat <<EOF >"${WORKDIR}/variables.ini"
 DEVICE_TYPE=${DEVICE_TYPE}
-BASE_URL=${BASE_URL}
+BASE_KERNEL_URL=${BASE_KERNEL_URL}
 PUB_DEST=${PUB_DEST}
 BUILD_NUMBER=${BUILD_NUMBER}
 BUILD_URL=${BUILD_URL}
