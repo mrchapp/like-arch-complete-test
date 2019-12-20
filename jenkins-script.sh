@@ -28,7 +28,7 @@ fi
 mkdir -p "${WORKDIR}"
 
 if [ ! -d "${WORKDIR}/lava-test-plans" ]; then
-  git clone -o origin https://github.com/mrchapp/lava-test-plans "${WORKDIR}/lava-test-plans"
+  git clone -o origin https://github.com/linaro/lava-test-plans "${WORKDIR}/lava-test-plans"
 else
   if [ -v GIT_SYNC ]; then
     (cd "${WORKDIR}/lava-test-plans" && git fetch origin && git reset --hard origin/master)
