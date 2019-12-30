@@ -7,7 +7,6 @@ set -u
 env
 echo
 [ ! -v GIT_DESCRIBE ] && [ -v LATEST_SHA ] && GIT_DESCRIBE="${LATEST_SHA:0:12}"
-echo "git describe: [$GIT_DESCRIBE]"
 
 if [[ -v HUDSON_COOKIE ]] || [[ -v CI ]]; then
   SUDO=$(command -v sudo || :)
@@ -107,6 +106,8 @@ create_vars_for_machine() {
     BUILD_NUMBER="${CI_BUILD_ID}"
     BASE_KERNEL_URL=$(echo "${DOWNLOAD_URL}" | cut -d/ -f1-3)
     PUB_DEST=$(echo "${DOWNLOAD_URL}" | cut -d/ -f4-)
+    GIT_DESCRIBE="$(jq .git_describe build.json | tr -d \")"
+
     case "${REPO_NAME}" in
       mainline)
         QA_PROJECT="linux-mainline-oe"
