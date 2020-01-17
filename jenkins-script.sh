@@ -185,7 +185,7 @@ create_vars_for_machine() {
       ROOTFS_FILENAME=rpb-console-image-lkft-ls2088ardb-20191019001216.rootfs.tar.xz
       ROOTFS_URL=http://people.linaro.org/~daniel.diaz/lkft-nxp/images/${ROOTFS_FILENAME}
       #LAVA_SERVER=http://59.144.98.45/RPC2/
-      LAVA_SERVER=nxp
+      LAVA_SERVER=lavalab.nxp.com
       BOOT_OS_PROMPT=
       LKFT_TEST_PLAN="lkft-full"
       ;;
