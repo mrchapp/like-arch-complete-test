@@ -47,7 +47,7 @@ generate_submit_tests() {
     --build-number "${GIT_DESCRIBE}" \
     --lava-server "${LAVA_SERVER}" \
     --qa-server https://qa-reports.linaro.org \
-    --qa-server-team staging-lkft \
+    --qa-server-team "${QA_TEAM}" \
     --qa-server-project "${QA_PROJECT}" \
     --test-plan "${LKFT_TEST_PLAN}"
   set +x
@@ -87,6 +87,7 @@ create_vars_for_machine() {
   ROOTFS_PUB_DEST="${ROOTFS_RELEASE_PUB_DEST}/${MACHINE_PUB_DEST}/${ROOTFS_BUILDNR_PUB_DEST}"
   GCC_VER_PUB_DEST="gcc-8"
   KERNEL_NAME=Image
+  QA_TEAM=staging-lkft
   QA_PROJECT="linux-mainline-oe"
   LKFT_TEST_PLAN="lkft-sanity"
   DTB_FILENAME=
