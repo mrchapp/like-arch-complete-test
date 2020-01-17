@@ -191,6 +191,7 @@ create_vars_for_machine() {
       LAVA_SERVER=lavalab.nxp.com
       BOOT_OS_PROMPT=
       LKFT_TEST_PLAN="lkft-full"
+      QA_TEAM=lkft
       ;;
     am57xx-evm | qemu_arm)
       # am57xx-evm
