@@ -176,6 +176,8 @@ create_vars_for_machine() {
         ROOTFS_URL_COMP="gz"
         KERNEL_URL=${KERNEL_PUB_DEST}/${KERNEL_NAME}
         BOOT_URL=${KERNEL_URL}
+      else
+        LKFT_TEST_PLAN="lkft-full"
       fi
       ;;
     ls2088a)
