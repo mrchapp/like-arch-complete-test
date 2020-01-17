@@ -8,6 +8,8 @@ env
 echo
 [ ! -v GIT_DESCRIBE ] && [ -v LATEST_SHA ] && GIT_DESCRIBE="${LATEST_SHA:0:12}"
 
+lava_tests=${lava_tests:-"--test-plan lkft-sanity"}
+
 if [[ -v HUDSON_COOKIE ]] || [[ -v CI ]]; then
   SUDO=$(command -v sudo || :)
   ${SUDO} pip3 install jinja2-cli requests ruamel.yaml
@@ -49,7 +51,7 @@ generate_submit_tests() {
     --qa-server https://qa-reports.linaro.org \
     --qa-server-team "${QA_TEAM}" \
     --qa-server-project "${QA_PROJECT}" \
-    --test-plan "${LKFT_TEST_PLAN}"
+    ${lava_tests}
   set +x
 }
 
