@@ -149,7 +149,6 @@ create_vars_for_machine() {
       BOOT_IMG_FILENAME=boot--5.4+git0+219d54332a-r0-dragonboard-410c-20191216215555.img
       ROOTFS_FILENAME=rpb-console-image-lkft-dragonboard-410c-20191216215555.rootfs.ext4.gz
       BOOT_URL=${BASE_ROOTFS_URL}/${ROOTFS_PUB_DEST}/${BOOT_IMG_FILENAME}
-      TAGS="[old-firmware]"
       BOOT_OS_PROMPT='dragonboard-410c:'
       DEPLOY_TARGET="download"
       ;;
